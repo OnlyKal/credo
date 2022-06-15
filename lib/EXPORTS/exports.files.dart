@@ -6,5 +6,6 @@ export '../INTERFACES/dashboard.dart';
 export '../INTERFACES/splashscreen.dart';
 export '../INTERFACES/customer.create.dart';
 export '../INTERFACES/customer.edit.dart';
+export '../APIS/api.dart';
 
 
