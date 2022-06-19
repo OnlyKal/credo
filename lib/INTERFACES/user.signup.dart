@@ -9,11 +9,20 @@ class UserSignup extends StatefulWidget {
 }
 
 class _UserSignupState extends State<UserSignup> {
-  TextEditingController user_mail = TextEditingController();
-  TextEditingController user_password = TextEditingController();
+  TextEditingController userName = TextEditingController();
+  TextEditingController userPhone = TextEditingController();
+  TextEditingController userMail = TextEditingController();
+  TextEditingController userPassword = TextEditingController();
 
   bool isObscur = true;
-  _onConnexion() => null;
+  
+  _onSignUp() => signup({
+        'name': userName,
+        'password': userPassword,
+        'email': userMail,
+        'phoneNumber': userPhone
+      });
+      
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
       });
@@ -81,15 +90,15 @@ class _UserSignupState extends State<UserSignup> {
                                   SizedBox(
                                     height: fullHeight(context) * 0.025,
                                   ),
-                                  inputField(context, user_mail,
+                                  inputField(context, userName,
                                       'Noms (Joh Doe)', Icons.person),
-                                  inputField(context, user_mail, 'Téléphone',
+                                  inputField(context, userPhone, 'Téléphone',
                                       Icons.phone),
-                                  inputField(context, user_mail, 'Adresse mail',
+                                  inputField(context, userMail, 'Adresse mail',
                                       Icons.email),
                                   inputFieldPass(
                                       context,
-                                      user_password,
+                                      userPassword,
                                       'Mot de passe',
                                       Icons.key_rounded,
                                       isObscur,
@@ -116,7 +125,7 @@ class _UserSignupState extends State<UserSignup> {
                                   SizedBox(
                                     height: fullHeight(context) * 0.02,
                                   ),
-                                  button(context, _onConnexion, 'Créer compte')
+                                  button(context, _onSignUp, 'Créer compte')
                                 ],
                               ),
                               SizedBox(

@@ -1,21 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import './EXPORTS/exports.files.dart';
 
-
-
-
-class PostHttpOverrides extends HttpOverrides{
+class PostHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(context){
+  HttpClient createHttpClient(context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  HttpOverrides.global = new PostHttpOverrides();
+  HttpOverrides.global = PostHttpOverrides();
   runApp(MaterialApp(
     theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
