@@ -12,7 +12,7 @@ void main() async {
     debugShowCheckedModeBanner: false,
     initialRoute: '/',
     routes: {
-      '/': (context) => const UserSignin(),
+      '/': (context) => const SplashScreen(),
       '/dashboard': (context) => const DashBoard(),
       '/user/signin': (context) => const UserSignin(),
       '/user/signup': (context) => const UserSignup(),

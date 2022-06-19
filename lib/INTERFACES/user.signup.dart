@@ -116,7 +116,7 @@ class _UserSignupState extends State<UserSignup> {
                                   SizedBox(
                                     height: fullHeight(context) * 0.02,
                                   ),
-                                  button(context, _onConnexion, 'Connexion')
+                                  button(context, _onConnexion, 'Créer compte')
                                 ],
                               ),
                               SizedBox(
