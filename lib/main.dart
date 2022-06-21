@@ -29,7 +29,9 @@ void main() async {
       '/user/signup': (context) => const UserSignup(),
       '/user/profil': (context) => const UserProfil(),
       '/customer/add': (context) => const CurstomerCreate(),
-      '/customer/edit': (context) => const CurstomerEdit()
+      '/customer/edit': (context) => const CurstomerEdit(),
+      '/trans': (context) => const HomeTransaction(),
+      '/home': (context) => const Home()
     },
   ));
 }

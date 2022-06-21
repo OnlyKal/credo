@@ -1,1 +1,1 @@
-var serverAddress = 'https://192.168.9.5:3000';
+var serverAddress = 'http://192.168.43.74:5768';

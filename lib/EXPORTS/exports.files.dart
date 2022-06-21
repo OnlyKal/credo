@@ -14,3 +14,6 @@ export '../CONFIG/colors.dart';
 export '../STATICS/data.static.dart';
 export '../APIS/user.api.dart';
 export '../CONFIG/messa.toast.dart';
+export '../INTERFACES/home.dart';
+export '../INTERFACES/transactions.dart';
+export '../APIS/client.api.dart';

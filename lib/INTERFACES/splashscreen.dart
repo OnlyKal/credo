@@ -34,13 +34,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: const [
                 Image(
                     image: AssetImage('assets/images/credo.png'),
-                    height: 67,
+                    height: 130,
                     fit: BoxFit.cover),
                 Text(
-                  'Mobile Credit Monitoring ',
+                  ' ',
                   style: TextStyle(
                       fontWeight: FontWeight.w300,
-                      // color: greencolor,
                       fontSize: 15),
                 ),
                 SizedBox(

@@ -13,9 +13,13 @@ class _UserSigninState extends State<UserSignin> {
   TextEditingController userPassword = TextEditingController();
 
   bool isObscur = true;
-  _onConnexion() =>
-      signin({'phoneNumber': userPhone, 'password': userPassword});
-      
+
+  _onConnexion() {
+    Navigator.pushNamed(context, '/home');
+
+    // signin(userPhone.text, userPassword.text);
+  }
+
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
       });
@@ -50,7 +54,7 @@ class _UserSigninState extends State<UserSignin> {
                                     image:
                                         AssetImage('assets/images/credo.png'),
                                     fit: BoxFit.cover,
-                                    height: 60,
+                                    height: 90,
                                   ),
                                   SizedBox(
                                     height: fullHeight(context) * 0.026,

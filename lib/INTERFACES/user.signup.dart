@@ -15,14 +15,14 @@ class _UserSignupState extends State<UserSignup> {
   TextEditingController userPassword = TextEditingController();
 
   bool isObscur = true;
-  
-  _onSignUp() => signup({
-        'name': userName,
-        'password': userPassword,
-        'email': userMail,
-        'phoneNumber': userPhone
-      });
-      
+
+  _onSignUp() => signup(
+        userName.text,
+        userPhone.text,
+        userPassword.text,
+        userMail.text,
+      );
+
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
       });
@@ -57,7 +57,7 @@ class _UserSignupState extends State<UserSignup> {
                                     image:
                                         AssetImage('assets/images/credo.png'),
                                     fit: BoxFit.cover,
-                                    height: 60,
+                                    height: 90,
                                   ),
                                   SizedBox(
                                     height: 25,
