@@ -14,6 +14,7 @@ class PostHttpOverrides extends HttpOverrides {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = PostHttpOverrides();
+
   runApp(MaterialApp(
     theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(

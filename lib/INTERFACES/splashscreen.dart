@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 
@@ -12,11 +13,20 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    super.initState();
+    session();
+  }
+
+  Future<void> session() async {
+    var checkSession = await readSession();
+  
     Timer(
         const Duration(seconds: 8),
-        () => Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const UserSignin())));
-    super.initState();
+        () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    checkSession['TOKEN']!=null ? const Home() : const UserSignin())));
   }
 
   @override
@@ -38,9 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.cover),
                 Text(
                   ' ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 15),
+                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15),
                 ),
                 SizedBox(
                   height: 33,

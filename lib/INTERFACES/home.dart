@@ -9,7 +9,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedMenu = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +70,42 @@ class _HomeState extends State<Home> {
   }
 }
 
+Widget cursotmerForder(context, data) {
+  return Container(
+    child: Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: const [
+          Icon(
+            Icons.create_new_folder,
+            color: Colors.amber,
+            size: 32,
+          ),
+          SizedBox(
+            height: 7,
+          ),
+          Text(
+            'JUSTIN BIHANGO Stark',
+            style: TextStyle(fontSize: 12, color: Colors.white),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Text(
+            '30.000 FC',
+            style: TextStyle(
+                fontSize: 22, fontWeight: FontWeight.bold, color: greencolor),
+          ),
+        ],
+      ),
+    ),
+    decoration: BoxDecoration(
+        color: Colors.black, borderRadius: BorderRadius.circular(15)),
+  );
+}
+
 Widget lastTransaction(context) {
   return Padding(
     padding: const EdgeInsets.all(3),
@@ -87,8 +126,8 @@ Widget lastTransaction(context) {
               'Justin Bihango Stark',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: Color.fromARGB(184, 233, 253, 249)),
+                fontWeight: FontWeight.w800,
+              ),
             ),
             Text(
               'Mer.12.03.2022',
@@ -115,6 +154,8 @@ _addCurstomer(BuildContext context) {
   TextEditingController curstomerName = TextEditingController();
   TextEditingController curstomerPhone = TextEditingController();
   TextEditingController curstomerDetails = TextEditingController();
+
+ 
 
   _onCreateCurstomer() => addCurtomer(
       curstomerName.text, curstomerPhone.text, curstomerDetails.text);
@@ -148,6 +189,10 @@ class FirstTab extends StatefulWidget {
 }
 
 class _FirstTabState extends State<FirstTab> {
+  final List<Map> myProducts =
+      List.generate(100000, (index) => {"id": index, "name": "Product $index"})
+          .toList();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -176,7 +221,21 @@ class _FirstTabState extends State<FirstTab> {
                   );
                 },
               ),
-            ))
+            )),
+        Expanded(
+          child: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 3 / 2,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20),
+                  itemCount: myProducts.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return cursotmerForder(context, myProducts[index]["name"]);
+                  })),
+        )
       ],
     );
   }
@@ -190,6 +249,10 @@ class SecondTab extends StatefulWidget {
 }
 
 class _SecondTabState extends State<SecondTab> {
+  final List<Map> myProducts =
+      List.generate(100000, (index) => {"id": index, "name": "Product $index"})
+          .toList();
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -199,8 +262,8 @@ class _SecondTabState extends State<SecondTab> {
           return Padding(
             padding:
                 const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [

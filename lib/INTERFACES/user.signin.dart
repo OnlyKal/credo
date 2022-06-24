@@ -3,7 +3,6 @@ import '../EXPORTS/exports.files.dart';
 
 class UserSignin extends StatefulWidget {
   const UserSignin({Key? key}) : super(key: key);
-
   @override
   State<UserSignin> createState() => _UserSigninState();
 }
@@ -14,11 +13,7 @@ class _UserSigninState extends State<UserSignin> {
 
   bool isObscur = true;
 
-  _onConnexion() {
-    Navigator.pushNamed(context, '/home');
-
-    // signin(userPhone.text, userPassword.text);
-  }
+  _onConnexion() => signin(context, userPhone.text, userPassword.text);
 
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
@@ -44,12 +39,15 @@ class _UserSigninState extends State<UserSignin> {
                           padding: const EdgeInsets.all(20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
+                                  SizedBox(
+                                    height: paddingTop(context),
+                                  ),
                                   const Image(
                                     image:
                                         AssetImage('assets/images/credo.png'),
@@ -57,7 +55,7 @@ class _UserSigninState extends State<UserSignin> {
                                     height: 90,
                                   ),
                                   SizedBox(
-                                    height: fullHeight(context) * 0.026,
+                                    height: fullHeight(context) * 0.032,
                                   ),
                                   const Text(
                                     'Créer un compte',
@@ -78,7 +76,7 @@ class _UserSigninState extends State<UserSignin> {
                                 ],
                               ),
                               SizedBox(
-                                height: fullHeight(context) * 0.06,
+                                height: fullHeight(context) * 0.03,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,8 +85,8 @@ class _UserSigninState extends State<UserSignin> {
                                   const SizedBox(
                                     height: 25,
                                   ),
-                                  inputField(context, userPhone, 'Adresse mail',
-                                      Icons.email),
+                                  inputField(context, userPhone, 'Téléphone',
+                                      Icons.phone),
                                   inputFieldPass(
                                       context,
                                       userPassword,
