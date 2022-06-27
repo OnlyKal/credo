@@ -19,14 +19,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> session() async {
     var checkSession = await readSession();
-  
+
     Timer(
         const Duration(seconds: 8),
         () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    checkSession['TOKEN']!=null ? const Home() : const UserSignin())));
+                builder: (context) => checkSession['TOKEN'] != null
+                    ? const Home()
+                    : const UserSignin())));
   }
 
   @override
@@ -42,23 +43,15 @@ class _SplashScreenState extends State<SplashScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                Image(
-                    image: AssetImage('assets/images/credo.png'),
-                    height: 130,
-                    fit: BoxFit.cover),
                 Text(
-                  ' ',
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 15),
+                  'Crédit Monitoring ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                      color: greencolor),
                 ),
                 SizedBox(
                   height: 33,
-                ),
-                SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1,
-                  ),
                 ),
               ])),
         ]),

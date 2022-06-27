@@ -32,13 +32,14 @@ readSession() async {
   }
 }
 
-void detroySession() async {
+void detroySession(context) async {
   try {
     final userSession = await SharedPreferences.getInstance();
 
     userSession.remove('user_id');
     userSession.remove('user_token');
     userSession.clear();
+         goto(context, const UserSignin());
   } catch (ex) {
     debugPrint('DESTROTY SESSION : ${ex.toString()}');
   }
@@ -52,8 +53,8 @@ Future signin(context, userPhone, userPassword) async {
           'Content-Type': 'application/json;charset=UTF-8'
         },
         body: jsonEncode(<String, String>{
-          'phoneNumber': '0973512884',
-          'password': '00000000t'
+          'phoneNumber': userPhone,
+          'password': userPassword
         }));
 
     var data = jsonDecode(response.body);

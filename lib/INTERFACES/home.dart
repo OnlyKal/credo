@@ -9,25 +9,36 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future? curstomerData;
+  TextEditingController curstomerName = TextEditingController();
+  TextEditingController curstomerPhone = TextEditingController();
+  TextEditingController curstomerDetails = TextEditingController();
+
+  _onCreateCurstomer() {
+    addCurtomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
+    setState(() {
+      curstomerData = getCustomer();
+      curstomerName.text = curstomerPhone.text = curstomerDetails.text = '';
+    });
+  }
+
   @override
   void initState() {
+    setState(() {
+      curstomerData = getCustomer();
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
           title: const Text(
             'Credit monitoring',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          leading: const Icon(
-            Icons.more_vert_sharp,
-            color: Colors.transparent,
-            size: 1,
           ),
           actions: [
             Padding(
@@ -35,7 +46,36 @@ class _HomeState extends State<Home> {
               child: PopupMenuButton<int>(
                   onSelected: (item) => setState(() {
                         if (item == 1) {
-                          _addCurstomer(context);
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Nouveau client'),
+                                  content: SizedBox(
+                                      width: fullWidth(context),
+                                      height: fullHeight(context) * 0.23,
+                                      child: SingleChildScrollView(
+                                        child: Column(children: [
+                                          inputField(context, curstomerName,
+                                              'Noms du client', Icons.person),
+                                          inputField(context, curstomerPhone,
+                                              'Télephone', Icons.phone),
+                                          inputField(
+                                              context,
+                                              curstomerDetails,
+                                              'Détails',
+                                              Icons.density_medium_sharp),
+                                        ]),
+                                      )),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: _onCreateCurstomer,
+                                        child: const Text('Ajouter',
+                                            style:
+                                                TextStyle(color: greencolor)))
+                                  ],
+                                );
+                              });
                         }
                       }),
                   itemBuilder: (context) => [
@@ -52,284 +92,260 @@ class _HomeState extends State<Home> {
                       ]),
             )
           ],
-          bottom: const TabBar(
-            tabs: [
-              Tab(
-                icon: Icon(Icons.home_filled),
-              ),
-              Tab(icon: Icon(Icons.people_rounded)),
-              Tab(
-                icon: Icon(Icons.history_toggle_off_sharp),
-              )
-            ],
-          ),
         ),
-        body: const TabBarView(children: [FirstTab(), SecondTab(), FirstTab()]),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: fullHeight(context),
+            width: fullWidth(context),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(children: [
+                Expanded(
+                    child: FutureBuilder<dynamic>(
+                        future: curstomerData,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> curtomer) {
+                          if (curtomer.hasError) {
+                            return _error('Erreur, données inaccessible..!');
+                          }
+                          if (curtomer.connectionState ==
+                              ConnectionState.none) {
+                            return const Text('No COnnnection');
+                          }
+                          if (curtomer.connectionState ==
+                              ConnectionState.waiting) {
+                            return _waiting('Attente des données..');
+                          }
+                          if (curtomer.connectionState ==
+                              ConnectionState.done) {
+                            if (curtomer.hasData) {
+                              if (curtomer.data['type'] == 'success') {
+                                var data = curtomer.data['result'];
+
+                                if (data.length == 0) {
+                                  return _empty(
+                                      'Désolé, aucun client identifiés...!');
+                                }
+
+                                return ListView.builder(
+                                    itemCount: curtomer.data['result'].length,
+                                    itemBuilder: (context, i) {
+                                      return GestureDetector(
+                                        onTap: () => goto(context,
+                                            HomeTransaction(customer: data[i])),
+                                        child: Column(
+                                          children: [
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            SizedBox(
+                                              height: fullHeight(context) * .1,
+                                              width: fullWidth(context),
+                                              child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Text(
+                                                      data[i]['description']
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          color: Colors.grey),
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              child: Text(
+                                                                '${data[i]['name'].substring(0, 1)}',
+                                                                style: const TextStyle(
+                                                                    color:
+                                                                        greencolor),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 7,
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  data[i]['name']
+                                                                      .toString(),
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          22,
+                                                                      color: Color.fromARGB(
+                                                                          255,
+                                                                          204,
+                                                                          203,
+                                                                          203),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 4,
+                                                                ),
+                                                                Text(
+                                                                  data[i]['phone']
+                                                                      .toString(),
+                                                                  style: const TextStyle(
+                                                                      color:
+                                                                          greencolor),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                        Text(
+                                                          'CDF ${data[i]['balance'].toString()}',
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      241,
+                                                                      39,
+                                                                      39),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ]),
+                                            ),
+                                            Container(
+                                              height: 2,
+                                              width: fullWidth(context),
+                                              color: const Color.fromARGB(
+                                                  255, 78, 77, 77),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              }
+                            }
+                          }
+                          return _error('Erreur, données inaccessible..!');
+                        })),
+                Container(
+                  height: 3,
+                  width: fullWidth(context),
+                  color: Colors.amber,
+                ),
+              ]),
+            ),
+          ),
+        ));
   }
-}
 
-Widget cursotmerForder(context, data) {
-  return Container(
-    child: Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          Icon(
-            Icons.create_new_folder,
-            color: Colors.amber,
-            size: 32,
-          ),
-          SizedBox(
-            height: 7,
-          ),
-          Text(
-            'JUSTIN BIHANGO Stark',
-            style: TextStyle(fontSize: 12, color: Colors.white),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          Text(
-            '30.000 FC',
-            style: TextStyle(
-                fontSize: 22, fontWeight: FontWeight.bold, color: greencolor),
-          ),
-        ],
-      ),
-    ),
-    decoration: BoxDecoration(
-        color: Colors.black, borderRadius: BorderRadius.circular(15)),
-  );
-}
-
-Widget lastTransaction(context) {
-  return Padding(
-    padding: const EdgeInsets.all(3),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(3),
-        color: greencolor,
-      ),
-      height: fullHeight(context) * .09,
-      width: fullWidth(context) * .28,
+  Widget cursotmerForder(context, customerName, curstomerBalance) {
+    return Container(
       child: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(10),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'Justin Bihango Stark',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-              ),
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Icon(
+              Icons.create_new_folder,
+              color: Colors.amber,
+              size: 32,
+            ),
+            const SizedBox(
+              height: 7,
             ),
             Text(
-              'Mer.12.03.2022',
-              style: TextStyle(fontSize: 11, color: Colors.white),
+              '$customerName',
+              style: const TextStyle(fontSize: 12, color: Colors.white),
             ),
-            SizedBox(
-              height: 9,
+            const SizedBox(
+              height: 4,
             ),
             Text(
-              '300000.00 £',
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  fontWeight: FontWeight.bold),
+              '$curstomerBalance FC',
+              style: const TextStyle(
+                  fontSize: 22, fontWeight: FontWeight.bold, color: greencolor),
             ),
           ],
         ),
       ),
-    ),
-  );
-}
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 30, 29, 29),
+          borderRadius: BorderRadius.circular(10)),
+    );
+  }
 
-_addCurstomer(BuildContext context) {
-  TextEditingController curstomerName = TextEditingController();
-  TextEditingController curstomerPhone = TextEditingController();
-  TextEditingController curstomerDetails = TextEditingController();
-
- 
-
-  _onCreateCurstomer() => addCurtomer(
-      curstomerName.text, curstomerPhone.text, curstomerDetails.text);
-
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Nouveau client'),
-          content: SizedBox(
-              width: fullWidth(context),
-              height: fullHeight(context) * 0.23,
-              child: SingleChildScrollView(
-                child: Column(children: [
-                  inputField(
-                      context, curstomerName, 'Noms du client', Icons.person),
-                  inputField(context, curstomerPhone, 'Télephone', Icons.phone),
-                  inputField(context, curstomerDetails, 'Détails',
-                      Icons.density_medium_sharp),
-                ]),
-              )),
-          actions: [button(context, _onCreateCurstomer, 'Enregistrer')],
-        );
-      });
-}
-
-class FirstTab extends StatefulWidget {
-  const FirstTab({Key? key}) : super(key: key);
-  @override
-  State<FirstTab> createState() => _FirstTabState();
-}
-
-class _FirstTabState extends State<FirstTab> {
-  final List<Map> myProducts =
-      List.generate(100000, (index) => {"id": index, "name": "Product $index"})
-          .toList();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
+  _waiting(message) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          height: paddingTop(context),
+        const SizedBox(
+          height: 16,
+          width: 15,
+          child: CircularProgressIndicator(
+            strokeWidth: 1,
+          ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 15, bottom: 15, top: 15),
-          child: Text('Les Transactions récentes'),
+        const SizedBox(
+          width: 9,
         ),
-        Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: SizedBox(
-              height: fullHeight(context) * 0.1,
-              width: fullWidth(context),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 4,
-                itemBuilder: (context, i) {
-                  return GestureDetector(
-                    onTap: null,
-                    child: lastTransaction(context),
-                  );
-                },
-              ),
-            )),
-        Expanded(
-          child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
-                  itemCount: myProducts.length,
-                  itemBuilder: (BuildContext ctx, index) {
-                    return cursotmerForder(context, myProducts[index]["name"]);
-                  })),
-        )
+        Text(message)
       ],
     );
   }
-}
 
-class SecondTab extends StatefulWidget {
-  const SecondTab({Key? key}) : super(key: key);
+  _error(message) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.cloud_off,
+          size: 26,
+          color: Color.fromARGB(255, 158, 158, 158),
+        ),
+        const SizedBox(
+          height: 6,
+        ),
+        Text(message)
+      ],
+    );
+  }
 
-  @override
-  State<SecondTab> createState() => _SecondTabState();
-}
-
-class _SecondTabState extends State<SecondTab> {
-  final List<Map> myProducts =
-      List.generate(100000, (index) => {"id": index, "name": "Product $index"})
-          .toList();
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: 200,
-        scrollDirection: Axis.vertical,
-        itemBuilder: ((context, index) {
-          return Padding(
-            padding:
-                const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                            color: greencolor,
-                            borderRadius:
-                                BorderRadius.circular(fullHeight(context))),
-                        child: const Center(
-                            child: Icon(
-                          Icons.person_outline_rounded,
-                          size: 30,
-                        )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child: SizedBox(
-                            height: 50,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Justin Bihango',
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w800),
-                                ),
-                                const SizedBox(
-                                  height: 6,
-                                ),
-                                Row(
-                                  children: const [
-                                    Text(
-                                      '10.000 FC',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color:
-                                              Color.fromARGB(206, 25, 144, 240),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      width: 30,
-                                    ),
-                                    Text(
-                                      '0 FC',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color:
-                                              Color.fromARGB(245, 221, 43, 43),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )),
-                      )
-                    ],
-                  ),
-                  const Icon(Icons.addchart_rounded)
-                ]),
-          );
-        }));
+  _empty(message) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.person_add_disabled_outlined,
+          size: 34,
+          color: Color.fromARGB(255, 158, 158, 158),
+        ),
+        const SizedBox(
+          height: 6,
+        ),
+        Text(message)
+      ],
+    );
   }
 }
