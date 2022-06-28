@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
+import 'package:contact_picker/contact_picker.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -21,6 +22,9 @@ class _HomeState extends State<Home> {
       curstomerName.text = curstomerPhone.text = curstomerDetails.text = '';
     });
   }
+
+  final ContactPicker _contactPicker = ContactPicker();
+  late Contact _contact;
 
   @override
   void initState() {
@@ -53,17 +57,44 @@ class _HomeState extends State<Home> {
                                   title: const Text('Nouveau client'),
                                   content: SizedBox(
                                       width: fullWidth(context),
-                                      height: fullHeight(context) * 0.23,
+                                      height: fullHeight(context) * 0.28,
                                       child: SingleChildScrollView(
                                         child: Column(children: [
+                                          GestureDetector(
+                                              onTap: () async {
+                                                Contact contact =
+                                                    await _contactPicker
+                                                        .selectContact();
+                                                setState(() {
+                                                  curstomerName.text = contact
+                                                      .fullName
+                                                      .toString();
+                                                  curstomerPhone.text = contact
+                                                      .phoneNumber
+                                                      .toString();
+                                                });
+                                              },
+                                              child: Row(
+                                                children: const [
+                                                  Icon(
+                                                    Icons
+                                                        .add_circle_outline_rounded,
+                                                    color: greencolor,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text('Contacts')
+                                                ],
+                                              )),
                                           inputField(context, curstomerName,
                                               'Noms du client', Icons.person),
                                           inputField(context, curstomerPhone,
-                                              'Télephone', Icons.phone),
+                                              'Téléphone', Icons.phone),
                                           inputField(
                                               context,
                                               curstomerDetails,
-                                              'Détails',
+                                              'Description',
                                               Icons.density_medium_sharp),
                                         ]),
                                       )),

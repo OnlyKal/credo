@@ -44,14 +44,21 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                 Text(
-                  'Crédit Monitoring ',
+                  'Credo ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                      fontSize: 32,
                       color: greencolor),
                 ),
                 SizedBox(
-                  height: 33,
+                  height: 5,
+                ),
+                Text(
+                  'Credit Monitoring ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                  ),
                 ),
               ])),
         ]),

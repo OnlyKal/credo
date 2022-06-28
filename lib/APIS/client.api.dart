@@ -21,6 +21,7 @@ Future addCurtomer(curstomerName, curstomerPhone, curstomerDescription) async {
         'description': curstomerDescription
       }),
     );
+    debugPrint(response.body);
     var data = jsonDecode(response.body);
     if (data['type'] == 'failure') {
       messageError(data['message']);

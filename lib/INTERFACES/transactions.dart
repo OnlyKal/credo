@@ -1,5 +1,7 @@
+import 'package:credo/APIS/trans.api.dart';
 import 'package:credo/CONFIG/colors.dart';
 import 'package:credo/CONFIG/media.query.dart';
+import 'package:credo/EXPORTS/exports.files.dart';
 import 'package:flutter/material.dart';
 
 class HomeTransaction extends StatefulWidget {
@@ -12,6 +14,11 @@ class HomeTransaction extends StatefulWidget {
 
 class _HomeTransactionState extends State<HomeTransaction> {
   var newBalance = '';
+
+  TextEditingController opertationType = TextEditingController();
+  TextEditingController operationMount = TextEditingController();
+  TextEditingController operationDescription = TextEditingController();
+
   @override
   void initState() {
     debugPrint(widget.customer.toString());
@@ -19,6 +26,12 @@ class _HomeTransactionState extends State<HomeTransaction> {
       newBalance = '830.0000';
     });
     super.initState();
+  }
+
+  _oncreateOperatiom() {
+    addOperation(opertationType.text, operationMount.text,
+        operationDescription.text, widget.customer['id']);
+    setState(() {});
   }
 
   @override
@@ -88,7 +101,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
 
             Row(
               children: [
-                _option(Icons.addchart_sharp, 'Nouvelle', null),
+                _option(Icons.addchart_sharp, 'Opération', _addTransactionForm),
                 const SizedBox(
                   width: 15,
                 ),
@@ -103,6 +116,35 @@ class _HomeTransactionState extends State<HomeTransaction> {
         ),
       )),
     );
+  }
+
+  _addTransactionForm() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Nouvelle opération'),
+            content: SizedBox(
+                width: fullWidth(context),
+                height: fullHeight(context) * 0.26,
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    inputField(context, opertationType, 'Type de operation',
+                        Icons.person),
+                    inputField(context, operationMount, 'Montant',
+                        Icons.balance_sharp),
+                    inputField(context, operationDescription, 'Description',
+                        Icons.density_medium_sharp),
+                  ]),
+                )),
+            actions: [
+              TextButton(
+                  onPressed: _oncreateOperatiom,
+                  child: const Text('Ajouter',
+                      style: TextStyle(color: greencolor)))
+            ],
+          );
+        });
   }
 
   _option(icon, title, onTap) {
