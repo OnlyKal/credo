@@ -10,7 +10,7 @@ Future addOperation(operationType, operationMontant, operationDesc,customerId) a
   try {
     var checkSession = await readSession();
     var response = await http.post(
-      Uri.parse('$serverAddress/client/add'),
+      Uri.parse('$serverAddress/transaction/add'),
       headers: <String, String>{
         'token': checkSession['TOKEN'].toString(),
         'Content-Type': 'application/json;charset=UTF-8'
@@ -19,7 +19,7 @@ Future addOperation(operationType, operationMontant, operationDesc,customerId) a
         'userId': checkSession['SESSION'].toString(),
         'clientId':customerId,
         'type': operationType,
-        'Aamount': operationMontant,
+        'amount': operationMontant,
         'description': operationDesc
       }),
     );

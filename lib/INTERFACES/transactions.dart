@@ -23,14 +23,20 @@ class _HomeTransactionState extends State<HomeTransaction> {
   void initState() {
     debugPrint(widget.customer.toString());
     setState(() {
-      newBalance = '830.0000';
+      newBalance = widget.customer['balance'].toString();
     });
     super.initState();
   }
 
-  _oncreateOperatiom() {
-    addOperation(opertationType.text, operationMount.text,
-        operationDescription.text, widget.customer['id']);
+  _oncreateDebit() {
+    addOperation('Debit', operationMount.text, operationDescription.text,
+        widget.customer['id'].toString());
+    setState(() {});
+  }
+
+  _oncreateCredit() {
+    addOperation('Credit', operationMount.text, operationDescription.text,
+        widget.customer['id'].toString());
     setState(() {});
   }
 
@@ -50,11 +56,21 @@ class _HomeTransactionState extends State<HomeTransaction> {
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              widget.customer['name'].toString(),
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Text(
+                  widget.customer['name'].toString(),
+                  style: const TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  widget.customer['description'].toString(),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w300),
+                ),
+              ],
             ),
             const SizedBox(
               height: 18,
@@ -77,7 +93,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                 'Total Balance',
                                 style: TextStyle(
                                     fontSize: 15,
-                                    color: Color.fromARGB(255, 14, 232, 210)),
+                                    color: Color.fromARGB(255, 54, 248, 229)),
                               ),
                               const SizedBox(
                                 height: 7,
@@ -101,7 +117,11 @@ class _HomeTransactionState extends State<HomeTransaction> {
 
             Row(
               children: [
-                _option(Icons.addchart_sharp, 'Opération', _addTransactionForm),
+                _option(Icons.bookmark_remove, 'Decaissement', _addDebit),
+                const SizedBox(
+                  width: 15,
+                ),
+                _option(Icons.bookmark_add, 'Encaissement', _addCredit),
                 const SizedBox(
                   width: 15,
                 ),
@@ -118,20 +138,18 @@ class _HomeTransactionState extends State<HomeTransaction> {
     );
   }
 
-  _addTransactionForm() {
+  _addCredit() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Nouvelle opération'),
+            title: const Text('Créditer compte'),
             content: SizedBox(
                 width: fullWidth(context),
-                height: fullHeight(context) * 0.26,
+                height: fullHeight(context) * 0.17,
                 child: SingleChildScrollView(
                   child: Column(children: [
-                    inputField(context, opertationType, 'Type de operation',
-                        Icons.person),
-                    inputField(context, operationMount, 'Montant',
+                    inputField(context, operationMount, 'Montant reçu',
                         Icons.balance_sharp),
                     inputField(context, operationDescription, 'Description',
                         Icons.density_medium_sharp),
@@ -139,8 +157,35 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 )),
             actions: [
               TextButton(
-                  onPressed: _oncreateOperatiom,
-                  child: const Text('Ajouter',
+                  onPressed: _oncreateCredit,
+                  child: const Text('Créditer compte',
+                      style: TextStyle(color: greencolor)))
+            ],
+          );
+        });
+  }
+
+  _addDebit() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Décaisser l'argent"),
+            content: SizedBox(
+                width: fullWidth(context),
+                height: fullHeight(context) * 0.17,
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    inputField(context, operationMount, 'Montant à decaisser',
+                        Icons.balance_sharp),
+                    inputField(context, operationDescription, 'Description',
+                        Icons.density_medium_sharp),
+                  ]),
+                )),
+            actions: [
+              TextButton(
+                  onPressed: _oncreateDebit,
+                  child: const Text('Débiter compte',
                       style: TextStyle(color: greencolor)))
             ],
           );
