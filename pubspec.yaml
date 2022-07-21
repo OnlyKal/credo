@@ -37,7 +37,7 @@ dependencies:
   http: ^0.13.4
   fluttertoast: ^8.0.9
   shared_preferences: ^2.0.15
-  # contact_picker:
+  
   overlay_support: ^2.0.1
   fluttercontactpicker: ^4.6.0
   intl: ^0.17.0

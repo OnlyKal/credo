@@ -39,7 +39,7 @@ void detroySession(context) async {
     userSession.remove('user_id');
     userSession.remove('user_token');
     userSession.clear();
-         goto(context, const UserSignin());
+    goto(context, const UserSignin());
   } catch (ex) {
     debugPrint('DESTROTY SESSION : ${ex.toString()}');
   }
