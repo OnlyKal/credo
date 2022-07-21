@@ -48,14 +48,32 @@ class _UserSigninState extends State<UserSignin> {
                                   SizedBox(
                                     height: paddingTop(context),
                                   ),
-                                  const Image(
-                                    image:
-                                        AssetImage('assets/images/credo.png'),
-                                    fit: BoxFit.cover,
-                                    height: 90,
+                                  SizedBox(
+                                    height: fullHeight(context) * 0.04,
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: const [
+                                      Text(
+                                        'Cre',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 44,
+                                            color: greencolor),
+                                      ),
+                                      Text(
+                                        'do',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w200,
+                                            fontSize: 44,
+                                            color: greencolor),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(
-                                    height: fullHeight(context) * 0.032,
+                                    height: fullHeight(context) * 0.06,
                                   ),
                                   const Text(
                                     'Créer un compte',
@@ -68,7 +86,7 @@ class _UserSigninState extends State<UserSignin> {
                                     height: 6,
                                   ),
                                   const Text(
-                                    'Compèter vos identifiants pour accéder au compte',
+                                    'Complèter vos identifiants pour accéder au compte',
                                     style: TextStyle(
                                         color: greencolor,
                                         fontWeight: FontWeight.w400),

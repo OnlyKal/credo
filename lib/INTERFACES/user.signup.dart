@@ -53,28 +53,43 @@ class _UserSignupState extends State<UserSignup> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Image(
-                                    image:
-                                        AssetImage('assets/images/credo.png'),
-                                    fit: BoxFit.cover,
-                                    height: 90,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: const [
+                                      Text(
+                                        'Cre',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 44,
+                                            color: greencolor),
+                                      ),
+                                      Text(
+                                        'do',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w200,
+                                            fontSize: 44,
+                                            color: greencolor),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 25,
                                   ),
-                                  Text(
+                                  const Text(
                                     'Créer un compte',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w900,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 6,
                                   ),
-                                  Text(
-                                    'Compèter vos identifiants pour créer un compte',
+                                  const Text(
+                                    'Complèter les champs pour créer un compte',
                                     style: TextStyle(
                                         color: greencolor,
                                         fontWeight: FontWeight.w400),

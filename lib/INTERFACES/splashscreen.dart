@@ -42,22 +42,36 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                Text(
-                  'Credo ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
-                      color: greencolor),
+                    Text(
+                      'Cre',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 44,
+                          color: greencolor),
+                    ),
+                    Text(
+                      'do',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w200,
+                          fontSize: 44,
+                          color: greencolor),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
+                const SizedBox(
+                  height: 3,
                 ),
-                Text(
+                const Text(
                   'Credit Monitoring ',
                   style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 15,
                   ),
                 ),
               ])),
