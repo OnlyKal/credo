@@ -41,6 +41,9 @@ dependencies:
   overlay_support: ^2.0.1
   fluttercontactpicker: ^4.6.0
   intl: ^0.17.0
+  sqflite: ^2.0.2+1
+  path: ^1.8.0
+  dbcrypt: ^2.0.0
 
 dev_dependencies:
   flutter_test:
