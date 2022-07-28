@@ -11,8 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Future? curstomerData;
   TextEditingController seachcontroller = TextEditingController();
+  String _searchResult = '';
   TextEditingController curstomerName = TextEditingController();
   TextEditingController curstomerPhone = TextEditingController();
   TextEditingController curstomerDetails = TextEditingController();
@@ -20,7 +20,6 @@ class _HomeState extends State<Home> {
   _onCreateCurstomer() {
     addCurtomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
     setState(() {
-      curstomerData = getCustomer();
       curstomerName.text = curstomerPhone.text = curstomerDetails.text = '';
     });
   }
@@ -28,30 +27,9 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     setState(() {
-      curstomerData = getCustomer();
+      getCustomer();
     });
     super.initState();
-  }
-
-  _option(icon, title, onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-                color: Colors.amber, borderRadius: BorderRadius.circular(6)),
-            child: Center(child: Icon(icon)),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Text(title, style: const TextStyle(fontSize: 12))
-        ],
-      ),
-    );
   }
 
   String _setDate(formattedString) {
@@ -110,6 +88,11 @@ class _HomeState extends State<Home> {
                           padding: const EdgeInsets.only(left: 13, right: 13),
                           child: TextField(
                             controller: seachcontroller,
+                            onChanged: (value) {
+                              setState(() {
+                                _searchResult = value.toString();
+                              });
+                            },
                             decoration: const InputDecoration(
                                 hintText: 'Recherche client',
                                 prefixIcon: Icon(
@@ -131,7 +114,9 @@ class _HomeState extends State<Home> {
                   child: Padding(
                 padding: const EdgeInsets.only(left: 17, right: 17),
                 child: FutureBuilder<dynamic>(
-                    future: curstomerData,
+                    future: _searchResult != ''
+                        ? getCustomerByName(_searchResult)
+                        : getCustomer(),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> curtomer) {
                       if (curtomer.hasError) {
@@ -157,9 +142,14 @@ class _HomeState extends State<Home> {
                                 padding: EdgeInsets.zero,
                                 itemCount: curtomer.data['result'].length,
                                 itemBuilder: (context, i) {
-                                  debugPrint(
-                                      curtomer.data['result'].toString());
-
+                               
+                                 List list =data.toList();
+                                    list.sort((a, b) {
+                                      return a['name']
+                                          .toLowerCase()
+                                          .compareTo(b['name'].toLowerCase());
+                                    });
+                               
                                   return GestureDetector(
                                     onTap: () => goto(context,
                                         HomeTransaction(customer: data[i])),
@@ -190,7 +180,7 @@ class _HomeState extends State<Home> {
                                                           backgroundColor:
                                                               greencolor,
                                                           child: Text(
-                                                            '${data[i]['name'].substring(0, 1)}',
+                                                            '${list[i]['name'].substring(0, 1)}',
                                                             style:
                                                                 const TextStyle(
                                                                     color: Colors
@@ -209,7 +199,7 @@ class _HomeState extends State<Home> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              data[i]['name']
+                                                              list[i]['name']
                                                                   .toString(),
                                                               style: const TextStyle(
                                                                   fontSize: 17,
@@ -227,7 +217,7 @@ class _HomeState extends State<Home> {
                                                               height: 4,
                                                             ),
                                                             Text(
-                                                              data[i]['phone']
+                                                              list[i]['phone']
                                                                   .toString(),
                                                               style: const TextStyle(
                                                                   fontSize: 12,
@@ -242,28 +232,33 @@ class _HomeState extends State<Home> {
                                                         )
                                                       ],
                                                     ),
-                                                    Text(
-                                                      'CDF ${data[i]['balance'].toString()}',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: data[i][
-                                                                      'balance'] >=
-                                                                  0
-                                                              ? const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  36,
-                                                                  198,
-                                                                  68)
-                                                              : const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  241,
-                                                                  39,
-                                                                  39),
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    )
+                                                    int.parse(list[i]['balance']
+                                                                .toString()) ==
+                                                            0
+                                                        ? const Text('')
+                                                        : Text(
+                                                            'CDF ${list[i]['balance'].toString()}',
+                                                            style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: list[i][
+                                                                            'balance'] >=
+                                                                        0
+                                                                    ? const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        36,
+                                                                        198,
+                                                                        68)
+                                                                    : const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        241,
+                                                                        39,
+                                                                        39),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          )
                                                   ],
                                                 )
                                               ]),

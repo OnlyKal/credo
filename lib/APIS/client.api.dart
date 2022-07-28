@@ -21,7 +21,7 @@ Future addCurtomer(curstomerName, curstomerPhone, curstomerDescription) async {
         'description': curstomerDescription
       }),
     );
-    debugPrint(response.body);
+
     var data = jsonDecode(response.body);
     if (data['type'] == 'failure') {
       messageError(data['message']);
@@ -44,6 +44,31 @@ Future getCustomer() async {
         body: jsonEncode(
             <String, String>{'userId': checkSession['SESSION'].toString()}));
     var data = jsonDecode(response.body);
+
+    if (data['type'] == 'success') {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  } catch (ex) {
+    debugPrint('GET CURSTOMERS : ${ex.toString()}');
+  }
+}
+
+Future getCustomerByName(customerName) async {
+  try {
+    var checkSession = await readSession();
+    var response = await http.post(Uri.parse('$serverAddress/client/getLike'),
+        headers: <String, String>{
+          'token': checkSession['TOKEN'].toString(),
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{
+          'userId': checkSession['SESSION'].toString(),
+          'name': customerName
+        }));
+    var data = jsonDecode(response.body);
+
     if (data['type'] == 'success') {
       return jsonDecode(response.body);
     } else {

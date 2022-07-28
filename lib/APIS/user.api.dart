@@ -58,6 +58,7 @@ Future signin(context, userPhone, userPassword) async {
         }));
 
     var data = jsonDecode(response.body);
+    debugPrint(response.body);
 
     if (data['type'] == 'failure') {
       messageError(data['message']);
@@ -83,6 +84,7 @@ Future signup(context, userName, userPhone, userPassword, userMail) async {
         'phoneNumber': userPhone,
         'password': userPassword,
         'email': userMail,
+        'currency': 'USD',
       }),
     );
 

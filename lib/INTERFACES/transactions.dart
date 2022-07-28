@@ -1,8 +1,7 @@
 import 'package:credo/APIS/trans.api.dart';
-import 'package:credo/CONFIG/colors.dart';
-import 'package:credo/CONFIG/media.query.dart';
 import 'package:credo/EXPORTS/exports.files.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomeTransaction extends StatefulWidget {
   final customer;
@@ -13,129 +12,218 @@ class HomeTransaction extends StatefulWidget {
 }
 
 class _HomeTransactionState extends State<HomeTransaction> {
-  var newBalance = '';
-
   TextEditingController opertationType = TextEditingController();
   TextEditingController operationMount = TextEditingController();
   TextEditingController operationDescription = TextEditingController();
-
-  @override
-  void initState() {
-    debugPrint(widget.customer.toString());
-    setState(() {
-      newBalance = widget.customer['balance'].toString();
-    });
-    super.initState();
-  }
+  TextEditingController dateController = TextEditingController();
 
   _oncreateDebit() {
     addOperation('Debit', operationMount.text, operationDescription.text,
-        widget.customer['id'].toString());
-    setState(() {});
+        widget.customer['id'].toString(), (dateController.text));
+    setState(() {
+      operationMount.text =
+          operationDescription.text = dateController.text = '';
+    });
+    Navigator.of(context).pop();
   }
 
   _oncreateCredit() {
     addOperation('Credit', operationMount.text, operationDescription.text,
-        widget.customer['id'].toString());
-    setState(() {});
+        widget.customer['id'].toString(), '22/09/2002');
+    setState(() {
+      operationMount.text =
+          operationDescription.text = dateController.text = '';
+    });
+    Navigator.of(context).pop();
   }
 
   @override
+  void initState() {
+    setState(() {});
+    super.initState();
+  }
+
+  var test = 2;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          '',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          title: const Text(
+            'Détails du client',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          elevation: 0,
+          backgroundColor: const Color.fromARGB(0, 176, 90, 90),
         ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text(
-                  widget.customer['name'].toString(),
-                  style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  widget.customer['description'].toString(),
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w300),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 18,
-            ),
-            Container(
-                height: fullHeight(context) * 0.13,
+        body: SingleChildScrollView(
+            child: SizedBox(
+                height: fullHeight(context),
                 width: fullWidth(context),
-                decoration: BoxDecoration(
-                    color: greencolor, borderRadius: BorderRadius.circular(4)),
-                child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Total Balance',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color.fromARGB(255, 54, 248, 229)),
-                              ),
-                              const SizedBox(
-                                height: 7,
-                              ),
-                              Text(
-                                'CDF $newBalance',
-                                style: const TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          const Image(
-                              image: AssetImage('assets/images/45000.png'))
-                        ]))),
-
-            // OPTIONS
-
-            const SizedBox(
-              height: 20,
-            ),
-
-            Row(
-              children: [
-                _option(Icons.bookmark_remove, 'Decaissement', _addDebit),
-                const SizedBox(
-                  width: 15,
-                ),
-                _option(Icons.bookmark_add, 'Encaissement', _addCredit),
-                const SizedBox(
-                  width: 15,
-                ),
-                _option(Icons.bar_chart_sharp, 'Situation', null),
-                const SizedBox(
-                  width: 15,
-                ),
-                _option(Icons.person_outline_sharp, 'Client', null),
-              ],
-            )
-          ],
-        ),
-      )),
-    );
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      child: FutureBuilder<dynamic>(
+                        future: getCustomerByName(
+                            widget.customer['name'].toString()),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> curtomer) {
+                          if (curtomer.hasData) {
+                            if (curtomer.data['type'] == 'success') {
+                              return Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          curtomer.data['result'][0]
+                                                  ['description']
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        const SizedBox(
+                                          height: 3,
+                                        ),
+                                        Text(
+                                          curtomer.data['result'][0]['name']
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                        height: fullHeight(context) * 0.13,
+                                        width: fullWidth(context),
+                                        decoration: BoxDecoration(
+                                            color: greencolor,
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        'Total Balance',
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    54,
+                                                                    248,
+                                                                    229)),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 7,
+                                                      ),
+                                                      Text(
+                                                        "CDF ${curtomer.data['result'][0]['balance'].toString()}",
+                                                        style: const TextStyle(
+                                                            fontSize: 22,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const Image(
+                                                      image: AssetImage(
+                                                          'assets/images/45000.png'))
+                                                ]))),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        _option(Icons.bookmark_remove,
+                                            'Décaissement', _addDebit),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        _option(Icons.bookmark_add,
+                                            'Encaissement', _addCredit),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                          return const Text('');
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: FutureBuilder<dynamic>(
+                          future: getTransction( widget.customer['name'].toString()),
+                          builder: (BuildContext comtext,
+                              AsyncSnapshot<dynamic> operation) {
+                            if (operation.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Text('has wait accured');
+                            }
+                    
+                            if (operation.hasError) {
+                              return const Text('has error accured');
+                            }
+                            if (operation.hasError) {
+                              return const Text('has error accured');
+                            }
+                    
+                            if (operation.connectionState ==
+                                ConnectionState.done) {
+                              if (operation.hasData) {
+                                if (operation.data['type'] == 'success') {
+                                  return ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      itemCount: operation.data['result'].length,
+                                      itemBuilder: ((context, i) {
+                                        return const Text('Text');
+                                      }));
+                                }
+                              }
+                            }
+                    
+                            return const Text('errrrooooo');
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ))));
   }
 
   _addCredit() {
@@ -157,7 +245,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 )),
             actions: [
               TextButton(
-                  onPressed: _oncreateCredit,
+                  onPressed: () => _oncreateCredit(),
                   child: const Text('Créditer compte',
                       style: TextStyle(color: greencolor)))
             ],
@@ -173,18 +261,55 @@ class _HomeTransactionState extends State<HomeTransaction> {
             title: const Text("Décaisser l'argent"),
             content: SizedBox(
                 width: fullWidth(context),
-                height: fullHeight(context) * 0.17,
+                height: fullHeight(context) * 0.27,
                 child: SingleChildScrollView(
                   child: Column(children: [
                     inputField(context, operationMount, 'Montant à decaisser',
                         Icons.balance_sharp),
                     inputField(context, operationDescription, 'Description',
                         Icons.density_medium_sharp),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
+                        child: Material(
+                          elevation: 3,
+                          child: Container(
+                            decoration: const BoxDecoration(border: Border()),
+                            height: 46,
+                            child: TextField(
+                              readOnly: true,
+                              onTap: () async {
+                                DateTime? pickerDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2002),
+                                    lastDate: DateTime(2102));
+                                if (pickerDate != null) {
+                                  String formatted = DateFormat('dd/MM/yyyy')
+                                      .format(pickerDate);
+                                  setState(() {
+                                    dateController.text = formatted;
+                                  });
+                                }
+                              },
+                              controller: dateController,
+                              cursorColor: greencolor,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.calendar_month),
+                                filled: true,
+                                hintText: 'Date écheance',
+                                border: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: greencolor)),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: greencolor)),
+                              ),
+                            ),
+                          ),
+                        ))
                   ]),
                 )),
             actions: [
               TextButton(
-                  onPressed: _oncreateDebit,
+                  onPressed: () => _oncreateDebit(),
                   child: const Text('Débiter compte',
                       style: TextStyle(color: greencolor)))
             ],
@@ -198,8 +323,8 @@ class _HomeTransactionState extends State<HomeTransaction> {
       child: Column(
         children: [
           Container(
-            height: 50,
-            width: 50,
+            height: 40,
+            width: 40,
             decoration: BoxDecoration(
                 color: Colors.amber, borderRadius: BorderRadius.circular(6)),
             child: Center(child: Icon(icon)),
