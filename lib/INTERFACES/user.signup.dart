@@ -1,3 +1,5 @@
+import 'package:credo/CONTROLLERS/user.controller.dart';
+import 'package:credo/MODELS/user.dart';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 
@@ -16,13 +18,8 @@ class _UserSignupState extends State<UserSignup> {
 
   bool isObscur = true;
 
-  _onSignUp() => signup(
-        context,
-        userName.text,
-        userPhone.text,
-        userPassword.text,
-        userMail.text,
-      );
+  _onAddUser() =>
+      signUp(userName.text, userPhone.text, userMail.text, userPassword.text);
 
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
@@ -133,7 +130,7 @@ class _UserSignupState extends State<UserSignup> {
                                       Text(
                                           'En cliquant sur créer compe, vous accépter'),
                                       Text(
-                                        "la politiaque de confidentialité et les cnditions d'utilisation",
+                                        "la politiaque de confidentialité et les conditions d'utilisation",
                                         style: TextStyle(color: greencolor),
                                       ),
                                     ],
@@ -141,7 +138,7 @@ class _UserSignupState extends State<UserSignup> {
                                   SizedBox(
                                     height: fullHeight(context) * 0.02,
                                   ),
-                                  button(context, _onSignUp, 'Créer compte')
+                                  button(context, _onAddUser, 'Créer compte')
                                 ],
                               ),
                               SizedBox(

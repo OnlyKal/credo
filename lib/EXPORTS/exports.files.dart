@@ -18,6 +18,9 @@ export '../INTERFACES/home.dart';
 export '../INTERFACES/transactions.dart';
 export '../APIS/client.api.dart';
 export '../CONFIG/routes.dart';
+export '../MODELS/client.dart';
+export '../MODELS/db.dart';
+export '../MODELS/user.dart';
 
 
 

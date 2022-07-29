@@ -34,5 +34,5 @@ void main() async {
       '/trans': (context) => const HomeTransaction(),
       '/home': (context) => const Home()
     },
-  ));
+  ));     
 }

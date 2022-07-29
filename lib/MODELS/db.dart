@@ -1,15 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-class Db{
-  static final Db instance= Db._instance();
-  static Database database=Null as Database;
+
+class Db {
+  static final Db instance = Db._instance();
+  static Database database = Null as Database;
   Db._instance();
 
   /// constructeur null
   Db();
 
   /// initialisation de la base de donnees
-  Future<Database> get db async{
+  Future<Database> get db async {
     database = await createDatabase();
     return database;
   }
@@ -25,9 +27,12 @@ class Db{
   /// creation des tables
   void dbTables(Database database, int version) async {
     /// table configuration general
-    await database.execute('CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber  not null, email TEXT  NULL,  password TEXT  NULL,token TEXT);');
-    await database.execute('CREATE TABLE clients(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber TEXT not null, description TEXT , balance REAL NOT NULL, currrency TEXT );');
-    await database.execute('CREATE TABLE transactions(id INTEGER PRIMARY KEY AUTOINCREMENT,debit REAL NOT NULL DEFAULT 0,credit REAL not null DEFAULT 0,newBalance REAL NOT NULL DEFAULT 0,clientId ENTIGER NOT NULL,dateRecord DATE,paymentDate DATE, description TEXT  );');
+    await database.execute(
+        'CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber  not null, email TEXT  NULL,  password TEXT  NULL,token TEXT);');
+    await database.execute(
+        'CREATE TABLE clients(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber TEXT not null, description TEXT , balance REAL NOT NULL, currrency TEXT );');
+    await database.execute(
+        'CREATE TABLE transactions(id INTEGER PRIMARY KEY AUTOINCREMENT,debit REAL NOT NULL DEFAULT 0,credit REAL not null DEFAULT 0,newBalance REAL NOT NULL DEFAULT 0,clientId ENTIGER NOT NULL,dateRecord DATE,paymentDate DATE, description TEXT  );');
   }
 
   /// cette methode [add] permet d'ajouter une nouvelle occurence
@@ -42,6 +47,7 @@ class Db{
     Database db = await this.db;
     final int result = await db.insert(table, values,
         conflictAlgorithm: ConflictAlgorithm.replace);
+    debugPrint(result.toString());
     if (result > 0) {
       return {"type": "success", "message": "Enregistrement effectuer"};
     } else {
@@ -81,17 +87,19 @@ class Db{
       return {"type": "failure", "message": "Quelque chose s'est mal passé"};
     }
   }
+
   /// cette methode [fetch] permet selectionner des element
   /// * @param @String [query] la requette d'insertion
   /// * @return @Map un dictionaire : type et message
   ///  "type":"success" si la requette s'est bien effectuer
   ///  "type":"failure" Dans le cas de l'eche d'enregistrement
-  Future<Map<String, String>> myInstert( String table, var field, var args) async {
+  Future<Map<String, String>> myInstert(
+      String table, var field, var args) async {
     Database db = await this.db;
-  final int result = await db.rawInsert(
-  'INSERT INTO $table($field) VALUES($args)');
-   
-    if (result>0) {
+    final int result =
+        await db.rawInsert('INSERT INTO $table($field) VALUES($args)');
+
+    if (result > 0) {
       return {"type": "success", "message": "Enregistrement effectuer"};
     } else {
       return {"type": "failure", "message": "Quelque chose s'est mal passé"};

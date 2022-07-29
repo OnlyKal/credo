@@ -31,14 +31,12 @@ class User {
     };
   }
 
-  Future<Map<String, String>> add1() {
+  Future<Map<String, String>> add() {
     Db db = Db();
     return db.add("users", toMap());
   }
-  Future<Map<String, dynamic>> add() {
-    Db db = Db();
-    return db.myInstert("users", "name,phoneNumber,email,password","$name,$phoneNumber,$email,$password");
-  }
+  
+  
 
   Object update() {
     Db db = Db();

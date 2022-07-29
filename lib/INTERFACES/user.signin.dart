@@ -76,7 +76,7 @@ class _UserSigninState extends State<UserSignin> {
                                     height: fullHeight(context) * 0.06,
                                   ),
                                   const Text(
-                                    'Créer un compte',
+                                    'Connectez-vous',
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w900,
