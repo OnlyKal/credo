@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
-import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,7 +14,8 @@ class _HomeState extends State<Home> {
   String _searchResult = '';
   TextEditingController curstomerName = TextEditingController();
   TextEditingController curstomerPhone = TextEditingController();
-  TextEditingController curstomerDetails = TextEditingController();
+  TextEditingController curstomerDetails =
+      TextEditingController(text: 'Partenaire');
 
   _onCreateCurstomer() {
     newCustomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
@@ -24,22 +24,16 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Client customer = const Client();
   @override
   void initState() {
     setState(() {
-      getCustomer();
+      customer.get();
     });
     super.initState();
   }
 
-  String _setDate(formattedString) {
-    DateTime date = DateTime.parse(formattedString);
-    String fdate = DateFormat('dd MMMM,yyyy | HH:mm a').format(date);
-    return fdate;
-  }
-
-  Client customer = const Client();
-
+  bool searchBar = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +43,6 @@ class _HomeState extends State<Home> {
             width: fullWidth(context),
             child: Column(children: [
               SizedBox(
-                height: fullHeight(context) * 0.19,
                 width: fullWidth(context),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -58,58 +51,87 @@ class _HomeState extends State<Home> {
                         height: paddingTop(context),
                       ),
                       SizedBox(
-                        height: fullHeight(context) * 0.06,
+                        height: fullHeight(context) * 0.07,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Cre',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 31,
-                                    color: greencolor),
-                              ),
-                              Text(
-                                'do',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200,
-                                    fontSize: 31,
-                                    color: greencolor),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        color: greencolor,
-                        height: fullHeight(context) * 0.06,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 13, right: 13),
-                          child: TextField(
-                            controller: seachcontroller,
-                            onChanged: (value) {
-                              setState(() {
-                                _searchResult = value.toString();
-                              });
-                            },
-                            decoration: const InputDecoration(
-                                hintText: 'Recherche client',
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.white,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: const [
+                                    Text(
+                                      'Credo',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 29,
+                                          color: greencolor),
+                                    ),
+                                  ],
                                 ),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                border: UnderlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide.none)),
+                                Row(children: [
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.notifications_active,
+                                        color: Colors.white,
+                                      )),
+                                  if (searchBar == false)
+                                    IconButton(
+                                        onPressed: () => setState(
+                                            () => searchBar = !searchBar),
+                                        icon: const Icon(
+                                          Icons.search_rounded,
+                                          color: Colors.white,
+                                        )),
+                                ])
+                              ],
+                            )),
+                      ),
+                      if (searchBar != true)
+                        Container(
+                          color: greencolor,
+                          height: 4,
+                        )
+                      else
+                        Container(
+                          color: greencolor,
+                          height: fullHeight(context) * 0.06,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 13, right: 13),
+                            child: TextField(
+                              controller: seachcontroller,
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchResult = value.toString();
+                                  if (seachcontroller.text == '') {
+                                    searchBar = false;
+                                  }
+                                });
+                              },
+                              decoration: InputDecoration(
+                                  hintText: 'Recherche client',
+                                  prefixIcon: IconButton(
+                                      onPressed: () => setState(() {
+                                            searchBar = !searchBar;
+                                            if (searchBar == false) {
+                                              seachcontroller.text = '';
+                                            }
+                                          }),
+                                      icon: const Icon(
+                                        Icons.search_rounded,
+                                        color: Colors.white,
+                                      )),
+                                  enabledBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  border: const UnderlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  focusedBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide.none)),
+                            ),
                           ),
-                        ),
-                      )
+                        )
                     ]),
               ),
               Expanded(
@@ -121,6 +143,7 @@ class _HomeState extends State<Home> {
                         : customer.get(),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> curtomer) {
+                      // debugPrint(curtomer.data.toString());
                       if (curtomer.hasError) {
                         return _error('Erreur, données inaccessible..!');
                       }
@@ -134,7 +157,7 @@ class _HomeState extends State<Home> {
                         if (curtomer.hasData) {
                           if (curtomer.data['type'] == 'success') {
                             var data = curtomer.data['result'];
-                            debugPrint(data.toString());
+                            // debugPrint(data.toString());
                             if (data.length == 0) {
                               return _empty(
                                   'Désolé, aucun client identifiés...!');
@@ -218,7 +241,7 @@ class _HomeState extends State<Home> {
                                                               height: 4,
                                                             ),
                                                             Text(
-                                                              list[i]['phone']
+                                                              list[i]['phoneNumber']
                                                                   .toString(),
                                                               style: const TextStyle(
                                                                   fontSize: 12,
@@ -233,33 +256,67 @@ class _HomeState extends State<Home> {
                                                         )
                                                       ],
                                                     ),
-                                                    int.parse(list[i]['balance']
-                                                                .toString()) ==
-                                                            0
-                                                        ? const Text('')
-                                                        : Text(
-                                                            'CDF ${list[i]['balance'].toString()}',
-                                                            style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: list[i][
-                                                                            'balance'] >=
-                                                                        0
-                                                                    ? const Color
-                                                                            .fromARGB(
-                                                                        255,
-                                                                        36,
-                                                                        198,
-                                                                        68)
-                                                                    : const Color
-                                                                            .fromARGB(
-                                                                        255,
-                                                                        241,
-                                                                        39,
-                                                                        39),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                          )
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        double.parse(list[i][
+                                                                        'cdfBalance']
+                                                                    .toString()) ==
+                                                                0.07
+                                                            ? const Text('')
+                                                            : Text(
+                                                                'CDF ${list[i]['cdfBalance'].toString()}',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: double.parse(list[i]['cdfBalance']
+                                                                                .toString()) >=
+                                                                            0.0
+                                                                        ? Colors
+                                                                            .amber
+                                                                        : const Color.fromARGB(
+                                                                            255,
+                                                                            241,
+                                                                            39,
+                                                                            39),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                        const SizedBox(
+                                                          height: 4,
+                                                        ),
+                                                        double.parse(list[i][
+                                                                        'usdBalance']
+                                                                    .toString()) ==
+                                                                0.04
+                                                            ? const Text('')
+                                                            : Text(
+                                                                'USD ${list[i]['usdBalance'].toString()}',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: double.parse(list[i]['usdBalance']
+                                                                                .toString()) >=
+                                                                            0.0
+                                                                        ? Colors
+                                                                            .blueAccent
+                                                                        : const Color.fromARGB(
+                                                                            255,
+                                                                            241,
+                                                                            39,
+                                                                            39),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                      ],
+                                                    )
                                                   ],
                                                 )
                                               ]),
@@ -284,7 +341,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.amber,
+          backgroundColor: greencolor,
           onPressed: () {
             showDialog(
                 context: context,
@@ -345,7 +402,7 @@ class _HomeState extends State<Home> {
                 });
           },
           child: const Icon(
-            Icons.add,
+            Icons.person_add_alt_outlined,
             color: Colors.white,
           ),
         ));

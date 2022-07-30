@@ -28,8 +28,8 @@ class Db {
   void dbTables(Database database, int version) async {
     /// table configuration general
     await database.execute('CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber  not null, email TEXT  NULL,  password TEXT  NULL,token TEXT);');
-    await database.execute('CREATE TABLE clients(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber TEXT not null, description TEXT ,usdBalance REAL NOT NULL DEFAULTE 0,cdfBalance REAL NOT NULL DEFAULTE 0 );');
-    await database.execute('CREATE TABLE transactions(id INTEGER PRIMARY KEY AUTOINCREMENT,usdDebit REAL NOT NULL DEFAULT 0,cdfDebit REAL NOT NULL DEFAULT 0,usdCredit REAL not null DEFAULT 0,cdfCredit REAL not null DEFAULT 0,usdBalance REAL NOT NULL DEFAULTE 0,cdfBalance REAL NOT NULL DEFAULTE 0,clientId ENTIGER NOT NULL,dateRecord DATE,paymentDate DATE, description TEXT  );');
+    await database.execute('CREATE TABLE clients(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber TEXT not null, description TEXT ,usdBalance REAL NOT NULL DEFAULT 0,cdfBalance REAL NOT NULL DEFAULT 0 );');
+    await database.execute('CREATE TABLE transactions(id INTEGER PRIMARY KEY AUTOINCREMENT,usdDebit REAL NOT NULL DEFAULT 0,cdfDebit REAL NOT NULL DEFAULT 0,usdCredit REAL not null DEFAULT 0,cdfCredit REAL not null DEFAULT 0,usdBalance REAL NOT NULL DEFAULT 0,cdfBalance REAL NOT NULL DEFAULT 0,clientId ENTIGER NOT NULL,dateRecord DATE,paymentDate DATE, description TEXT  );');
 
   }
 

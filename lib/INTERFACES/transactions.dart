@@ -16,6 +16,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
   TextEditingController operationMount = TextEditingController();
   TextEditingController operationDescription = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  Client customer = const Client();
 
   _oncreateDebit() {
     addOperation('Debit', operationMount.text, operationDescription.text,
@@ -43,7 +44,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
     super.initState();
   }
 
-  var test = 2;
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,12 +66,11 @@ class _HomeTransactionState extends State<HomeTransaction> {
                   children: [
                     SizedBox(
                       child: FutureBuilder<dynamic>(
-                        future: getCustomerByName(
-                            widget.customer['name'].toString()),
+                        future: customer.getById(widget.customer['id']),
                         builder: (BuildContext context,
-                            AsyncSnapshot<dynamic> curtomer) {
-                          if (curtomer.hasData) {
-                            if (curtomer.data['type'] == 'success') {
+                            AsyncSnapshot<dynamic> client) {
+                          if (client.hasData) {
+                            if (client.data['type'] == 'success') {
                               return Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: Column(
@@ -84,7 +84,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Text(
-                                          curtomer.data['result'][0]
+                                          client.data['result'][0]
                                                   ['description']
                                               .toString(),
                                           style: const TextStyle(
@@ -95,7 +95,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                           height: 3,
                                         ),
                                         Text(
-                                          curtomer.data['result'][0]['name']
+                                          client.data['result'][0]['name']
                                               .toString(),
                                           style: const TextStyle(
                                               fontSize: 22,
@@ -142,14 +142,36 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                       const SizedBox(
                                                         height: 7,
                                                       ),
-                                                      Text(
-                                                        "CDF ${curtomer.data['result'][0]['balance'].toString()}",
-                                                        style: const TextStyle(
-                                                            fontSize: 22,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "CDF ${client.data['result'][0]['usdBalance'].toString()}",
+                                                            style: const TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          const Text('-'),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Text(
+                                                            "USD ${client.data['result'][0]['usdBalance'].toString()}",
+                                                            style: const TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ],
+                                                      )
                                                     ],
                                                   ),
                                                   const Image(
@@ -188,35 +210,37 @@ class _HomeTransactionState extends State<HomeTransaction> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: FutureBuilder<dynamic>(
-                          future: getTransction( widget.customer['name'].toString()),
+                          future:
+                              getTransction(widget.customer['name'].toString()),
                           builder: (BuildContext comtext,
                               AsyncSnapshot<dynamic> operation) {
                             if (operation.connectionState ==
                                 ConnectionState.waiting) {
                               return const Text('has wait accured');
                             }
-                    
+
                             if (operation.hasError) {
                               return const Text('has error accured');
                             }
                             if (operation.hasError) {
                               return const Text('has error accured');
                             }
-                    
+
                             if (operation.connectionState ==
                                 ConnectionState.done) {
                               if (operation.hasData) {
                                 if (operation.data['type'] == 'success') {
                                   return ListView.builder(
                                       padding: EdgeInsets.zero,
-                                      itemCount: operation.data['result'].length,
+                                      itemCount:
+                                          operation.data['result'].length,
                                       itemBuilder: ((context, i) {
                                         return const Text('Text');
                                       }));
                                 }
                               }
                             }
-                    
+
                             return const Text('errrrooooo');
                           },
                         ),
@@ -238,9 +262,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     inputField(context, operationMount, 'Montant reçu',
-                        Icons.balance_sharp,TextInputType.number),
+                        Icons.balance_sharp, TextInputType.number),
                     inputField(context, operationDescription, 'Description',
-                        Icons.density_medium_sharp,TextInputType.text),
+                        Icons.density_medium_sharp, TextInputType.text),
                   ]),
                 )),
             actions: [
@@ -265,9 +289,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     inputField(context, operationMount, 'Montant à decaisser',
-                        Icons.balance_sharp,TextInputType.number),
+                        Icons.balance_sharp, TextInputType.number),
                     inputField(context, operationDescription, 'Description',
-                        Icons.density_medium_sharp,TextInputType.text),
+                        Icons.density_medium_sharp, TextInputType.text),
                     Padding(
                         padding: const EdgeInsets.only(top: 8, bottom: 8),
                         child: Material(
