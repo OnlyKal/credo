@@ -1,5 +1,4 @@
 import 'package:credo/CONTROLLERS/user.controller.dart';
-import 'package:credo/MODELS/user.dart';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 
@@ -11,15 +10,15 @@ class UserSignup extends StatefulWidget {
 }
 
 class _UserSignupState extends State<UserSignup> {
+
   TextEditingController userName = TextEditingController();
   TextEditingController userPhone = TextEditingController();
   TextEditingController userMail = TextEditingController();
   TextEditingController userPassword = TextEditingController();
-
   bool isObscur = true;
 
   _onAddUser() =>
-      signUp(userName.text, userPhone.text, userMail.text, userPassword.text);
+      signUp(context, userName.text, userPhone.text, userMail.text, userPassword.text);
 
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
@@ -103,12 +102,16 @@ class _UserSignupState extends State<UserSignup> {
                                   SizedBox(
                                     height: fullHeight(context) * 0.025,
                                   ),
-                                  inputField(context, userName,
-                                      'Noms (Joh Doe)', Icons.person),
+                                  inputField(
+                                      context,
+                                      userName,
+                                      'Noms (Joh Doe)',
+                                      Icons.person,
+                                      TextInputType.text),
                                   inputField(context, userPhone, 'Téléphone',
-                                      Icons.phone),
+                                      Icons.phone, TextInputType.number),
                                   inputField(context, userMail, 'Adresse mail',
-                                      Icons.email),
+                                      Icons.email, TextInputType.emailAddress),
                                   inputFieldPass(
                                       context,
                                       userPassword,

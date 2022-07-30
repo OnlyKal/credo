@@ -2,9 +2,7 @@ import 'package:credo/CONFIG/colors.dart';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 
-Widget inputField(BuildContext context, controller, label, icon) {
-  
-  
+Widget inputField(BuildContext context, controller, label, icon, _textType) {
   return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Material(
@@ -13,7 +11,7 @@ Widget inputField(BuildContext context, controller, label, icon) {
           decoration: const BoxDecoration(border: Border()),
           height: 46,
           child: TextField(
-
+            keyboardType: _textType,
             controller: controller,
             cursorColor: greencolor,
             decoration: InputDecoration(
@@ -30,8 +28,8 @@ Widget inputField(BuildContext context, controller, label, icon) {
       ));
 }
 
-Widget inputFieldPass(
-    BuildContext context, controller, label, icon, isObscur, passIcon,eventPass) {
+Widget inputFieldPass(BuildContext context, controller, label, icon, isObscur,
+    passIcon, eventPass) {
   return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Material(
@@ -45,7 +43,10 @@ Widget inputFieldPass(
             obscureText: isObscur,
             decoration: InputDecoration(
               prefixIcon: Icon(icon),
-              suffixIcon: GestureDetector(child: Icon(passIcon),onTap: eventPass,),
+              suffixIcon: GestureDetector(
+                child: Icon(passIcon),
+                onTap: eventPass,
+              ),
               filled: true,
               hintText: label,
               border: const UnderlineInputBorder(

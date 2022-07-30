@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
                 builder: (context) => checkSession['TOKEN'] != null
                     ? const Home()
-                    : const UserSignin())));
+                    : const UserSignup())));
   }
 
   @override

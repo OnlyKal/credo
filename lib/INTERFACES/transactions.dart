@@ -238,9 +238,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     inputField(context, operationMount, 'Montant reçu',
-                        Icons.balance_sharp),
+                        Icons.balance_sharp,TextInputType.number),
                     inputField(context, operationDescription, 'Description',
-                        Icons.density_medium_sharp),
+                        Icons.density_medium_sharp,TextInputType.text),
                   ]),
                 )),
             actions: [
@@ -265,9 +265,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 child: SingleChildScrollView(
                   child: Column(children: [
                     inputField(context, operationMount, 'Montant à decaisser',
-                        Icons.balance_sharp),
+                        Icons.balance_sharp,TextInputType.number),
                     inputField(context, operationDescription, 'Description',
-                        Icons.density_medium_sharp),
+                        Icons.density_medium_sharp,TextInputType.text),
                     Padding(
                         padding: const EdgeInsets.only(top: 8, bottom: 8),
                         child: Material(

@@ -82,7 +82,7 @@ class Db {
     Database db = await this.db;
     var result = await db.rawQuery(query);
     if (result.isNotEmpty) {
-      return {"type": "success", "message": result.toList()};
+      return {"type": "success", "result": result.toList()};
     } else {
       return {"type": "failure", "message": "Quelque chose s'est mal passé"};
     }

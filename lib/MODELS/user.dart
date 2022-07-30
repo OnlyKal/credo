@@ -1,6 +1,5 @@
 import 'package:credo/MODELS/db.dart';
 
-
 class User {
   final int? id;
   final String? name;
@@ -9,7 +8,13 @@ class User {
   final String? password;
   final String? token;
 
-  const User({this.id, this.name, this.phoneNumber, this.email, this.password, this.token});
+  const User(
+      {this.id,
+      this.name,
+      this.phoneNumber,
+      this.email,
+      this.password,
+      this.token});
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -17,7 +22,7 @@ class User {
       'phoneNumber': phoneNumber,
       'email': email,
       'password': password,
-      'token':token
+      'token': token
     };
   }
 
@@ -27,7 +32,6 @@ class User {
       'phoneNumber': phoneNumber,
       'email': email,
       'password': password,
-      
     };
   }
 
@@ -35,8 +39,6 @@ class User {
     Db db = Db();
     return db.add("users", toMap());
   }
-  
-  
 
   Object update() {
     Db db = Db();
@@ -50,10 +52,13 @@ class User {
     }
   }
 
+  Future login() {
+    Db db = Db();
+    return db.fetch("SELECT * FROM users where phoneNumber='$phoneNumber' or name='$name' and password='$password'");
+  }
+
   Future get() {
     Db db = Db();
     return db.fetch("SELECT * FROM users");
   }
-
-
 }

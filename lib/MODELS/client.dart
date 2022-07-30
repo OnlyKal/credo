@@ -66,7 +66,7 @@ class Client {
 
   Future get() {
     Db db = Db();
-    return db.fetch("SELECT * FROM users");
+    return db.fetch("SELECT * FROM clients");
   }
 
   Future getById(int id) {
@@ -79,7 +79,7 @@ class Client {
   Future getLike(String name) {
     Db db = Db();
     return db.fetch(
-      "SELECT * FROM users where name like '%$name%'",
+      "SELECT * FROM clients where name like '%$name%'",
     );
   }
 

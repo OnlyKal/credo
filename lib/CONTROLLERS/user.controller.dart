@@ -1,17 +1,23 @@
-import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void createNewSession(value, token) async {
-  try {
-    final userSession = await SharedPreferences.getInstance();
-    userSession.setString('credo_session', value);
-  } catch (ex) {
-    debugPrint('CREATE SESSION : ${ex.toString()}');
-  }
+Future signIn(context, userPhone, userPassword) async {
+  final session = await SharedPreferences.getInstance();
+  User user = User(phoneNumber: userPhone, password: userPassword);
+  user.login().then((data) {
+    if (data['type'] == 'failure') {
+      messageError(data['message']);
+    } else {
+      user.get().then((user) {
+        session.setString('user_token', user['result'][0]['token'].toString());
+        session.setString('user_id', user['result'][0]['id'].toString());
+        goto(context, const Home());
+      });
+    }
+  });
 }
 
-void signUp(userName, userPhone, userMail, userPassword) async {
+Future signUp(context, userName, userPhone, userMail, userPassword) async {
   final session = await SharedPreferences.getInstance();
   User user = User(
       name: userName,
@@ -19,14 +25,14 @@ void signUp(userName, userPhone, userMail, userPassword) async {
       email: userMail,
       password: userPassword);
   user.add().then((data) {
-    debugPrint(data.toString());
     if (data['type'] == 'failure') {
       messageError(data['message']);
     } else {
-      // session.setString('user_token', data['result']['token'].toString());
-      // session.setString('user_id', data['result']['id'].toString());
-      // goto(context, const Home());
-      messageSuccess(data['message']);
+      user.get().then((user) {
+        session.setString('user_token', user['result'][0]['token'].toString());
+        session.setString('user_id', user['result'][0]['id'].toString());
+        goto(context, const Home());
+      });
     }
   });
 }

@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   TextEditingController curstomerDetails = TextEditingController();
 
   _onCreateCurstomer() {
-    addCurtomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
+    newCustomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
     setState(() {
       curstomerName.text = curstomerPhone.text = curstomerDetails.text = '';
     });
@@ -37,6 +37,8 @@ class _HomeState extends State<Home> {
     String fdate = DateFormat('dd MMMM,yyyy | HH:mm a').format(date);
     return fdate;
   }
+
+  Client customer = const Client();
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +117,8 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.only(left: 17, right: 17),
                 child: FutureBuilder<dynamic>(
                     future: _searchResult != ''
-                        ? getCustomerByName(_searchResult)
-                        : getCustomer(),
+                        ? customer.getLike(_searchResult)
+                        : customer.get(),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> curtomer) {
                       if (curtomer.hasError) {
@@ -132,7 +134,7 @@ class _HomeState extends State<Home> {
                         if (curtomer.hasData) {
                           if (curtomer.data['type'] == 'success') {
                             var data = curtomer.data['result'];
-
+                            debugPrint(data.toString());
                             if (data.length == 0) {
                               return _empty(
                                   'Désolé, aucun client identifiés...!');
@@ -142,14 +144,13 @@ class _HomeState extends State<Home> {
                                 padding: EdgeInsets.zero,
                                 itemCount: curtomer.data['result'].length,
                                 itemBuilder: (context, i) {
-                               
-                                 List list =data.toList();
-                                    list.sort((a, b) {
-                                      return a['name']
-                                          .toLowerCase()
-                                          .compareTo(b['name'].toLowerCase());
-                                    });
-                               
+                                  List list = data.toList();
+                                  list.sort((a, b) {
+                                    return a['name']
+                                        .toLowerCase()
+                                        .compareTo(b['name'].toLowerCase());
+                                  });
+
                                   return GestureDetector(
                                     onTap: () => goto(context,
                                         HomeTransaction(customer: data[i])),
@@ -279,11 +280,6 @@ class _HomeState extends State<Home> {
                       return _error('Erreur, données inaccessible..!');
                     }),
               )),
-              Container(
-                height: 3,
-                width: fullWidth(context),
-                color: Colors.amber,
-              ),
             ]),
           ),
         ),
@@ -328,11 +324,11 @@ class _HomeState extends State<Home> {
                                   ],
                                 )),
                             inputField(context, curstomerName, 'Noms du client',
-                                Icons.person),
+                                Icons.person, TextInputType.text),
                             inputField(context, curstomerPhone, 'Téléphone',
-                                Icons.phone),
+                                Icons.phone, TextInputType.number),
                             inputField(context, curstomerDetails, 'Description',
-                                Icons.density_medium_sharp),
+                                Icons.density_medium_sharp, TextInputType.text),
                           ]),
                         )),
                     actions: [

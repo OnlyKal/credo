@@ -104,7 +104,7 @@ class _UserSigninState extends State<UserSignin> {
                                     height: 25,
                                   ),
                                   inputField(context, userPhone, 'Téléphone',
-                                      Icons.phone),
+                                      Icons.phone,TextInputType.number),
                                   inputFieldPass(
                                       context,
                                       userPassword,
