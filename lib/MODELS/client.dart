@@ -5,17 +5,19 @@ class Client {
   final String? name;
   final String? phoneNumber;
   final String? description;
-  final double? balance;
+  final double? usdBalance;
+  final double ? cdfBalance;
 
 
-  const Client({this.id, this.name, this.phoneNumber, this.description, this.balance});
+  const Client({this.id, this.name, this.phoneNumber, this.description, this.usdBalance, this.cdfBalance});
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
       'phoneNumber': phoneNumber,
       'description': description,
-      'balance': balance
+      'usdBalance': usdBalance,
+      'cdfBalance':cdfBalance
     };
   }
 
@@ -24,44 +26,14 @@ class Client {
       'name': name,
       'phoneNumber': phoneNumber,
       'description': description,
-      'balance': balance
+      'usdBalance': usdBalance,
+      'cdfBalance':cdfBalance
     };
   }
 
   Future<Map<String, String>> add() {
     Db db = Db();
-    double balances=0.00;
-   Future<Map<String,String>> query= db.myInstert("clients","name,phoneNumber,description,currrency,balance", "$name,$phoneNumber,$description,Cdf,$balance");
-    return db.myInstert("clients","name,phoneNumber,description,currrency,balance", "$name,$phoneNumber,$description,usd,$balance");
-
-    // if(query["type"]=="success"){
-    //   }else{
-    //   return {"type": "failure", "message": "Echec d'enregistrement"};
-    // }
-  }
-
-  Object update() {
-    Db db = Db();
-    if (id != null) {
-      return db.update("users", toMapWithId(), 'id=?', [id]);
-    } else {
-      return {
-        "type": "failure",
-        "message": "Echec de modification l'id est introuvable"
-      };
-    }
-  }
-
-  Object delete() {
-    Db db = Db();
-    if (id != null) {
-      return db.delete("users", 'id=?', [id]);
-    } else {
-      return {
-        "type": "failure",
-        "message": "Echec de suppression l'id est introuvable"
-      };
-    }
+    return db.add("clients", toMapWithId());
   }
 
   Future get() {
