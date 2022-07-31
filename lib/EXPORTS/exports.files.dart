@@ -21,8 +21,11 @@ export '../CONFIG/routes.dart';
 export '../MODELS/client.dart';
 export '../MODELS/db.dart';
 export '../MODELS/user.dart';
+export '../MODELS/db.dart';
+export '../MODELS/transaction.dart';
 export '../CONTROLLERS/customer.controller.dart';
-export '../CONTROLLERS/user.controller.dart';
+export '../CONTROLLERS/customer.controller.dart';
+export '../CONTROLLERS/trans.controller.dart';
 
 
 

@@ -19,7 +19,7 @@ class Db {
   /// creation de la base de bonnees et ouverture de connection
   createDatabase() async {
     String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'pharma.db');
+    String path = join(databasesPath, 'credo.db');
     var database = await openDatabase(path, version: 1, onCreate: dbTables);
     return database;
   }
@@ -29,7 +29,7 @@ class Db {
     /// table configuration general
     await database.execute('CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber  not null, email TEXT  NULL,  password TEXT  NULL,token TEXT);');
     await database.execute('CREATE TABLE clients(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,phoneNumber TEXT not null, description TEXT ,usdBalance REAL NOT NULL DEFAULT 0,cdfBalance REAL NOT NULL DEFAULT 0 );');
-    await database.execute('CREATE TABLE transactions(id INTEGER PRIMARY KEY AUTOINCREMENT,usdDebit REAL NOT NULL DEFAULT 0,cdfDebit REAL NOT NULL DEFAULT 0,usdCredit REAL not null DEFAULT 0,cdfCredit REAL not null DEFAULT 0,usdBalance REAL NOT NULL DEFAULT 0,cdfBalance REAL NOT NULL DEFAULT 0,clientId ENTIGER NOT NULL,dateRecord DATE,paymentDate DATE, description TEXT  );');
+    await database.execute('CREATE TABLE transactions(id INTEGER PRIMARY KEY AUTOINCREMENT,usdDebit REAL NOT NULL DEFAULT 0,cdfDebit REAL NOT NULL DEFAULT 0,usdCredit REAL not null DEFAULT 0,cdfCredit REAL not null DEFAULT 0,usdBalance REAL NOT NULL DEFAULT 0,cdfBalance REAL NOT NULL DEFAULT 0,clientId INTIGER NOT NULL,dateRecord  DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,paymentDate DATE, description TEXT  ,typeOp TEXT);');
 
   }
 

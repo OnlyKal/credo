@@ -1,17 +1,26 @@
 import 'package:credo/MODELS/db.dart';
 
-
 class Transaction {
   final int? id;
   final double? usdDebit;
-  final double ? cdfDebit;
-  final double? usdCredit ;
-  final double? cdfCredit; 
- 
-  final int ?clientId;
+  final double? cdfDebit;
+  final double? usdCredit;
+  final double? cdfCredit;
+
+  final int? clientId;
   final String? description;
-  final DateTime ? dateRecord;
-  const Transaction({this.id, this.usdDebit, this.cdfDebit, this.cdfCredit, this.usdCredit, this.clientId, this.description,this.dateRecord});
+  final String? paymentDate;
+  final String? typeOp;
+  const Transaction(
+      {this.id,
+      this.usdDebit,
+      this.cdfDebit,
+      this.cdfCredit,
+      this.usdCredit,
+      this.clientId,
+      this.description,
+      this.paymentDate,
+      this.typeOp});
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -19,9 +28,10 @@ class Transaction {
       'cdfDebit': cdfDebit,
       'cdfCredit': cdfCredit,
       'usdCredit': usdCredit,
-      'clientId':clientId,
-      'description':description,
-      'dateRecord':dateRecord
+      'clientId': clientId,
+      'description': description,
+      'paymentDate': paymentDate,
+      'typeOp': typeOp
     };
   }
 
@@ -31,33 +41,27 @@ class Transaction {
       'cdfDebit': cdfDebit,
       'cdfCredit': cdfCredit,
       'usdCredit': usdCredit,
-      'clientId':clientId,
-      'description':description,
-      'dateRecord':dateRecord
-      
+      'clientId': clientId,
+      'description': description,
+      'paymentDate': paymentDate,
+      'typeOp': typeOp
     };
   }
 
-  Future<Map<String, String>> add1() {
-    Db db = Db();
-    return db.add("users", toMap());
-  }
   Future<Map<String, dynamic>> add() {
     Db db = Db();
     return db.add("transactions", toMapWithId());
   }
 
- 
   Future get() {
     Db db = Db();
     return db.fetch("SELECT * FROM transactions");
   }
-  Future getByClientId(int clientId) {
+
+  Future getByClientId(id) {
     Db db = Db();
     return db.fetch(
-      "SELECT * FROM transactions where clientId=$clientId",
+      "SELECT * FROM transactions where clientId=$id",
     );
   }
-
-
 }

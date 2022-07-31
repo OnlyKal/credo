@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   _onCreateCurstomer() {
     newCustomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
     setState(() {
-      curstomerName.text = curstomerPhone.text = curstomerDetails.text = '';
+      curstomerName.text = curstomerPhone.text='';
     });
   }
 
@@ -143,7 +143,7 @@ class _HomeState extends State<Home> {
                         : customer.get(),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> curtomer) {
-                      // debugPrint(curtomer.data.toString());
+                 
                       if (curtomer.hasError) {
                         return _error('Erreur, données inaccessible..!');
                       }
@@ -157,7 +157,7 @@ class _HomeState extends State<Home> {
                         if (curtomer.hasData) {
                           if (curtomer.data['type'] == 'success') {
                             var data = curtomer.data['result'];
-                            // debugPrint(data.toString());
+                 
                             if (data.length == 0) {
                               return _empty(
                                   'Désolé, aucun client identifiés...!');
