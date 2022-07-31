@@ -245,7 +245,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                             const EdgeInsets.only(bottom: 8),
                                         child: Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
