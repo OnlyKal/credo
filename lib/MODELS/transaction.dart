@@ -64,4 +64,16 @@ class Transaction {
       "SELECT * FROM transactions where clientId=$id ORDER BY id DESC",
     );
   }
+  Future getUsd(int id) {
+    Db db = Db();
+    return db.fetch(
+      "SELECT (sum (usdDebit)-sum(usdCredit)) as balance FROM transactions where clientId=$id",
+    );
+  }
+  Future getCdf(int id) {
+    Db db = Db();
+    return db.fetch(
+      "SELECT (sum(cdfDebit)-sum(cdfCredit)) as balance FROM transactions where clientId=$id",
+    );
+  }
 }
