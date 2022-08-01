@@ -55,13 +55,13 @@ class Transaction {
 
   Future get() {
     Db db = Db();
-    return db.fetch("SELECT * FROM transactions");
+    return db.fetch("SELECT * FROM transactions ORDER BY id DESC");
   }
 
   Future getByClientId(id) {
     Db db = Db();
     return db.fetch(
-      "SELECT * FROM transactions where clientId=$id",
+      "SELECT * FROM transactions where clientId=$id ORDER BY id DESC",
     );
   }
 }

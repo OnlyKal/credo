@@ -63,6 +63,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(onPressed:()=> Navigator.of(context).pushNamed('/home'),icon:const Icon(Icons.arrow_back_ios),),
           title: const Text(
             'Détails du client',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),

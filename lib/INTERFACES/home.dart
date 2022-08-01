@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   _onCreateCurstomer() {
     newCustomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
     setState(() {
-      curstomerName.text = curstomerPhone.text='';
+      curstomerName.text = curstomerPhone.text = '';
     });
   }
 
@@ -143,7 +143,6 @@ class _HomeState extends State<Home> {
                         : customer.get(),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> curtomer) {
-                 
                       if (curtomer.hasError) {
                         return _error('Erreur, données inaccessible..!');
                       }
@@ -157,7 +156,7 @@ class _HomeState extends State<Home> {
                         if (curtomer.hasData) {
                           if (curtomer.data['type'] == 'success') {
                             var data = curtomer.data['result'];
-                 
+
                             if (data.length == 0) {
                               return _empty(
                                   'Désolé, aucun client identifiés...!');
@@ -167,13 +166,13 @@ class _HomeState extends State<Home> {
                                 padding: EdgeInsets.zero,
                                 itemCount: curtomer.data['result'].length,
                                 itemBuilder: (context, i) {
-                                  List list = data.toList();
-                                  list.sort((a, b) {
-                                    return a['name']
-                                        .toLowerCase()
-                                        .compareTo(b['name'].toLowerCase());
-                                  });
-
+                                  // List list = data.toList();
+                                  // list.sort((a, b) {
+                                  //   return a['name']
+                                  //       .toLowerCase()
+                                  //       .compareTo(b['name'].toLowerCase());
+                                  // });
+                                 
                                   return GestureDetector(
                                     onTap: () => goto(context,
                                         HomeTransaction(customer: data[i])),
@@ -204,7 +203,7 @@ class _HomeState extends State<Home> {
                                                           backgroundColor:
                                                               greencolor,
                                                           child: Text(
-                                                            '${list[i]['name'].substring(0, 1)}',
+                                                            '${data[i]['name'].substring(0, 1)}',
                                                             style:
                                                                 const TextStyle(
                                                                     color: Colors
@@ -223,7 +222,7 @@ class _HomeState extends State<Home> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              list[i]['name']
+                                                              data[i]['name']
                                                                   .toString(),
                                                               style: const TextStyle(
                                                                   fontSize: 17,
@@ -241,7 +240,7 @@ class _HomeState extends State<Home> {
                                                               height: 4,
                                                             ),
                                                             Text(
-                                                              list[i]['phoneNumber']
+                                                              data[i]['phoneNumber']
                                                                   .toString(),
                                                               style: const TextStyle(
                                                                   fontSize: 12,
@@ -264,17 +263,17 @@ class _HomeState extends State<Home> {
                                                           MainAxisAlignment
                                                               .spaceAround,
                                                       children: [
-                                                        double.parse(list[i][
+                                                        double.parse(data[i][
                                                                         'cdfBalance']
                                                                     .toString()) ==
                                                                 0.07
                                                             ? const Text('')
                                                             : Text(
-                                                                'CDF ${list[i]['cdfBalance'].toString()}',
+                                                                'CDF ${data[i]['cdfBalance'].toString()}',
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         12,
-                                                                    color: double.parse(list[i]['cdfBalance']
+                                                                    color: double.parse(data[i]['cdfBalance']
                                                                                 .toString()) >=
                                                                             0.0
                                                                         ? Colors
@@ -291,17 +290,17 @@ class _HomeState extends State<Home> {
                                                         const SizedBox(
                                                           height: 4,
                                                         ),
-                                                        double.parse(list[i][
+                                                        double.parse(data[i][
                                                                         'usdBalance']
                                                                     .toString()) ==
                                                                 0.04
                                                             ? const Text('')
                                                             : Text(
-                                                                'USD ${list[i]['usdBalance'].toString()}',
+                                                                'USD ${data[i]['usdBalance'].toString()}',
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         12,
-                                                                    color: double.parse(list[i]['usdBalance']
+                                                                    color: double.parse(data[i]['usdBalance']
                                                                                 .toString()) >=
                                                                             0.0
                                                                         ? Colors
