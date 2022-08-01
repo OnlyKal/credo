@@ -91,30 +91,41 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          client.data['result'][0]
-                                                  ['description']
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w300),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              client.data['result'][0]
+                                                      ['description']
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            const SizedBox(
+                                              height: 3,
+                                            ),
+                                            Text(
+                                              client.data['result'][0]['name']
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(
-                                          height: 3,
-                                        ),
-                                        Text(
-                                          client.data['result'][0]['name']
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                        IconButton(
+                                            onPressed: () {},
+                                            icon: const Icon(Icons.edit))
                                       ],
                                     ),
                                     const SizedBox(
@@ -241,132 +252,198 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                       var splitedDate = dateop.split(' ');
 
                                       return Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                operation.data['result'][i]
-                                                                ['typeOp'] ==
-                                                            'usdD' ||
-                                                        operation.data['result']
-                                                                [i]['typeOp'] ==
-                                                            'cdfD'
-                                                    ? const Text('Debit')
-                                                    : const Text('Credit'),
-                                                const SizedBox(height: 3),
-                                                Text(
-                                                  (splitedDate[0]
-                                                      .toString()
-                                                      .replaceAll('-', '/')),
-                                                  style: const TextStyle(
-                                                      fontSize: 10,
-                                                      color: Colors.grey),
-                                                ),
-                                              ],
-                                            ),
-                                            if (operation.data['result'][i]
-                                                        ['typeOp'] ==
-                                                    'usdD' ||
-                                                operation.data['result'][i]
-                                                        ['typeOp'] ==
-                                                    'cdfD')
-                                              Column(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
+                                                    CrossAxisAlignment.center,
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  operation.data['result'][i]
-                                                              ['typeOp'] ==
-                                                          'usdD'
-                                                      ? Text(
-                                                          'usd ${operation.data['result'][i]['usdCredit']}',
-                                                          style: const TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      183,
-                                                                      23,
-                                                                      12),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        )
-                                                      : Text(
-                                                          'cdf ${operation.data['result'][i]['cdfCredit']}',
-                                                          style: const TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      183,
-                                                                      23,
-                                                                      12),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                  const SizedBox(height: 3),
-                                                  Text(
-                                                    operation.data['result'][i]
-                                                        ['paymentDate'],
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        color: Colors.grey),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      operation.data['result']
+                                                                          [i][
+                                                                      'typeOp'] ==
+                                                                  'usdD' ||
+                                                              operation.data['result']
+                                                                          [i][
+                                                                      'typeOp'] ==
+                                                                  'cdfD'
+                                                          ? const Text(
+                                                              'Debit',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                            )
+                                                          : const Text(
+                                                              'Credit',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                            ),
+                                                      const SizedBox(height: 3),
+                                                      Row(
+                                                        children: [
+                                                          const Icon(
+                                                              Icons
+                                                                  .calendar_month_outlined,
+                                                              size: 13,
+                                                              color:
+                                                                  Colors.grey),
+                                                          const SizedBox(
+                                                              width: 06),
+                                                          Text(
+                                                            (splitedDate[0]
+                                                                .toString()
+                                                                .replaceAll(
+                                                                    '-', '/')),
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        10,
+                                                                    color: Colors
+                                                                        .grey),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              )
-                                            else
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  operation.data['result'][i]
-                                                              ['typeOp'] ==
-                                                          'usdC'
-                                                      ? Text(
-                                                          'usd ${operation.data['result'][i]['usdDebit']}',
-                                                          style: const TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      6,
-                                                                      138,
-                                                                      20),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        )
-                                                      : Text(
-                                                          'cdf ${operation.data['result'][i]['cdfDebit']}',
-                                                          style: const TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      6,
-                                                                      138,
-                                                                      20),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                  if (operation.data['result']
+                                                              [i]['typeOp'] ==
+                                                          'usdD' ||
+                                                      operation.data['result']
+                                                              [i]['typeOp'] ==
+                                                          'cdfD')
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        operation.data['result']
+                                                                        [i][
+                                                                    'typeOp'] ==
+                                                                'usdD'
+                                                            ? Text(
+                                                                'usd ${operation.data['result'][i]['usdCredit']}',
+                                                                style: const TextStyle(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            183,
+                                                                            23,
+                                                                            12),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )
+                                                            : Text(
+                                                                'cdf ${operation.data['result'][i]['cdfCredit']}',
+                                                                style: const TextStyle(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            183,
+                                                                            23,
+                                                                            12),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                        const SizedBox(
+                                                            height: 3),
+                                                        Row(
+                                                          children: [
+                                                            const Icon(
+                                                                Icons
+                                                                    .notifications_active_outlined,
+                                                                size: 13,
+                                                                color: Colors
+                                                                    .grey),
+                                                            const SizedBox(
+                                                                width: 06),
+                                                            Text(
+                                                              operation.data[
+                                                                      'result'][i]
+                                                                  [
+                                                                  'paymentDate'],
+                                                              style: const TextStyle(
+                                                                  fontSize: 10,
+                                                                  color: Colors
+                                                                      .grey),
+                                                            )
+                                                          ],
                                                         ),
-                                                  const SizedBox(height: 6),
+                                                      ],
+                                                    )
+                                                  else
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        operation.data['result']
+                                                                        [i][
+                                                                    'typeOp'] ==
+                                                                'usdC'
+                                                            ? Text(
+                                                                'usd ${operation.data['result'][i]['usdDebit']}',
+                                                                style: const TextStyle(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            6,
+                                                                            138,
+                                                                            20),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )
+                                                            : Text(
+                                                                'cdf ${operation.data['result'][i]['cdfDebit']}',
+                                                                style: const TextStyle(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            6,
+                                                                            138,
+                                                                            20),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                        const SizedBox(
+                                                            height: 6),
+                                                      ],
+                                                    ),
                                                 ],
                                               ),
-                                          ],
-                                        ),
-                                      );
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8, bottom: 5),
+                                                child: Container(
+                                                  color: Colors.grey,
+                                                  height: 0.2,
+                                                ),
+                                              )
+                                            ],
+                                          ));
                                     }));
                               }
                             }
