@@ -172,7 +172,7 @@ class _HomeState extends State<Home> {
                                   //       .toLowerCase()
                                   //       .compareTo(b['name'].toLowerCase());
                                   // });
-                                 
+
                                   return GestureDetector(
                                     onTap: () => goto(context,
                                         HomeTransaction(customer: data[i])),
@@ -199,16 +199,9 @@ class _HomeState extends State<Home> {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        CircleAvatar(
-                                                          backgroundColor:
-                                                              greencolor,
-                                                          child: Text(
-                                                            '${data[i]['name'].substring(0, 1)}',
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                          ),
+                                                        const Icon(
+                                                          Icons.person,
+                                                          color: greencolor,
                                                         ),
                                                         const SizedBox(
                                                           width: 7,

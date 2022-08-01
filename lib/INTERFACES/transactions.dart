@@ -63,7 +63,10 @@ class _HomeTransactionState extends State<HomeTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(onPressed:()=> Navigator.of(context).pushNamed('/home'),icon:const Icon(Icons.arrow_back_ios),),
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).pushNamed('/home'),
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
           title: const Text(
             'Détails du client',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -126,7 +129,10 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                         ),
                                         IconButton(
                                             onPressed: () {},
-                                            icon: const Icon(Icons.edit))
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: Colors.transparent,
+                                            ))
                                       ],
                                     ),
                                     const SizedBox(
@@ -460,7 +466,24 @@ class _HomeTransactionState extends State<HomeTransaction> {
                               return const Text('has error null');
                             }
 
-                            return const Text('errrrooooo');
+                            return SizedBox(
+                              height: fullHeight(context) * .2,
+                              child: Column(
+                                children: const [
+                                  Icon(
+                                    Icons.cancel_outlined,
+                                    color: Colors.grey,size: 20,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Aucune donnée pour le moment...!',
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              ), 
+                            );
                           },
                         ),
                       ),
