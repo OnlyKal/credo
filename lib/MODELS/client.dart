@@ -6,10 +6,15 @@ class Client {
   final String? phoneNumber;
   final String? description;
   final double? usdBalance;
-  final double ? cdfBalance;
+  final double? cdfBalance;
 
-
-  const Client({this.id, this.name, this.phoneNumber, this.description, this.usdBalance, this.cdfBalance});
+  const Client(
+      {this.id,
+      this.name,
+      this.phoneNumber,
+      this.description,
+      this.usdBalance,
+      this.cdfBalance});
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -17,7 +22,7 @@ class Client {
       'phoneNumber': phoneNumber,
       'description': description,
       'usdBalance': usdBalance,
-      'cdfBalance':cdfBalance
+      'cdfBalance': cdfBalance
     };
   }
 
@@ -27,7 +32,7 @@ class Client {
       'phoneNumber': phoneNumber,
       'description': description,
       'usdBalance': usdBalance,
-      'cdfBalance':cdfBalance
+      'cdfBalance': cdfBalance
     };
   }
 
@@ -38,7 +43,7 @@ class Client {
 
   Future get() {
     Db db = Db();
-    return db.fetch("SELECT * FROM clients");
+    return db.fetch("SELECT * FROM clients ORDER BY name ASC");
   }
 
   Future getById(int id) {
@@ -54,5 +59,4 @@ class Client {
       "SELECT * FROM clients where name like '%$name%'",
     );
   }
-
 }
