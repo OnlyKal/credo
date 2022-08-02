@@ -15,7 +15,8 @@ class _HomeTransactionState extends State<HomeTransaction> {
   TextEditingController operationMount = TextEditingController();
   TextEditingController operationDescription =
       TextEditingController(text: 'Opération cofrirmée');
-  TextEditingController dateController = TextEditingController();
+  TextEditingController dateControllerD = TextEditingController();
+  TextEditingController dateControllerC = TextEditingController();
   Transaction transaction = const Transaction();
   Client newClient = const Client();
 
@@ -24,33 +25,47 @@ class _HomeTransactionState extends State<HomeTransaction> {
   String newDeviseD = 'USD';
 
   _oncreateDebit() {
-    if (newDeviseD == 'USD') {
-      addUSDdedit(operationMount.text, widget.customer['id'],
-          dateController.text, operationDescription.text, 'usdD');
+    if (operationMount.text != '') {
+      if (dateControllerD.text != '') {
+        if (newDeviseD == 'USD') {
+          addUSDdedit(operationMount.text, widget.customer['id'],
+              dateControllerD.text, operationDescription.text, 'usdD');
+        } else {
+          addCDFdebit(operationMount.text, widget.customer['id'],
+              dateControllerD.text, operationDescription.text, 'cdfD');
+        }
+        setState(() {
+          operationMount.text = dateControllerD.text = '';
+        });
+        Navigator.of(context).pop();
+      } else {
+        messageError("Ajouter une date d'echeance!");
+      }
     } else {
-      addCDFdebit(operationMount.text, widget.customer['id'],
-          dateController.text, operationDescription.text, 'cdfD');
+      messageError("Ajouter un montant !");
     }
-
-    setState(() {
-      operationMount.text = dateController.text = '';
-    });
-    Navigator.of(context).pop();
   }
 
   _oncreateCredit() {
-    if (newDeviseC == 'USD') {
-      addUSDcrebit(operationMount.text, widget.customer['id'],
-          operationDescription.text, 'usdC');
+    if (operationMount.text != '') {
+      if (dateControllerC.text != '') {
+        if (newDeviseC == 'USD') {
+          addUSDcrebit(operationMount.text, widget.customer['id'],
+              operationDescription.text, 'usdC', dateControllerC.text);
+        } else {
+          addCDFcrebit(operationMount.text, widget.customer['id'],
+              operationDescription.text, 'cdfC', dateControllerC.text);
+        }
+        setState(() {
+          operationMount.text = dateControllerC.text = '';
+        });
+        Navigator.of(context).pop();
+      } else {
+        messageError("Ajouter une date d'echeance!");
+      }
     } else {
-      addCDFcrebit(operationMount.text, widget.customer['id'],
-          operationDescription.text, 'cdfC');
+      messageError("Ajouter un montant !");
     }
-
-    setState(() {
-      operationMount.text = dateController.text = '';
-    });
-    Navigator.of(context).pop();
   }
 
   @override
@@ -139,7 +154,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                       height: 10,
                                     ),
                                     Container(
-                                        height: fullHeight(context) * 0.13,
+                                        // height: fullHeight(context) * 0.14,
                                         width: fullWidth(context),
                                         decoration: BoxDecoration(
                                             color: greencolor,
@@ -147,68 +162,57 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                 BorderRadius.circular(4)),
                                         child: Padding(
                                             padding: const EdgeInsets.all(10),
-                                            child: Row(
+                                            child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Column(
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: const [
+                                                        Text(
+                                                          'Situation des opérations',
+                                                          style: TextStyle(
+                                                              fontSize: 15,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      138,
+                                                                      248,
+                                                                      237)),
+                                                        ),
+                                                        Image(
+                                                            height: 70,
+                                                            width: 70,
+                                                            image: AssetImage(
+                                                              'assets/images/45000.png',
+                                                            ))
+                                                      ]),
+                                                  Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                            .spaceBetween,
                                                     children: [
-                                                      const Text(
-                                                        'Total Balance',
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    54,
-                                                                    248,
-                                                                    229)),
-                                                      ),
+                                                      balanceCDF(
+                                                          context,
+                                                          widget
+                                                              .customer['id']),
                                                       const SizedBox(
-                                                        height: 7,
+                                                        width: 10,
                                                       ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "CDF ${client.data['result'][0]['usdBalance'].toString()}",
-                                                            style: const TextStyle(
-                                                                fontSize: 20,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          const Text('-'),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            "USD ${client.data['result'][0]['usdBalance'].toString()}",
-                                                            style: const TextStyle(
-                                                                fontSize: 20,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
-                                                      )
+                                                      const Text(''),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      balanceUSD(context,
+                                                          widget.customer['id'])
                                                     ],
-                                                  ),
-                                                  const Image(
-                                                      image: AssetImage(
-                                                          'assets/images/45000.png'))
+                                                  )
                                                 ]))),
                                     const SizedBox(
                                       height: 10,
@@ -246,7 +250,6 @@ class _HomeTransactionState extends State<HomeTransaction> {
                               transaction.getByClientId(widget.customer['id']),
                           builder: (BuildContext comtext,
                               AsyncSnapshot<dynamic> operation) {
-                            debugPrint(operation.data.toString());
                             if (operation.hasData) {
                               if (operation.data['type'] == 'success') {
                                 return ListView.builder(
@@ -260,7 +263,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
 
                                       return Padding(
                                           padding:
-                                              const EdgeInsets.only(bottom: 10),
+                                              const EdgeInsets.only(bottom: 20),
                                           child: Column(
                                             children: [
                                               Row(
@@ -437,6 +440,28 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                               ),
                                                         const SizedBox(
                                                             height: 6),
+                                                        Row(
+                                                          children: [
+                                                            const Icon(
+                                                                Icons
+                                                                    .notifications_active_outlined,
+                                                                size: 13,
+                                                                color: Colors
+                                                                    .grey),
+                                                            const SizedBox(
+                                                                width: 06),
+                                                            Text(
+                                                              operation.data[
+                                                                      'result'][i]
+                                                                  [
+                                                                  'paymentDate'],
+                                                              style: const TextStyle(
+                                                                  fontSize: 10,
+                                                                  color: Colors
+                                                                      .grey),
+                                                            )
+                                                          ],
+                                                        ),
                                                       ],
                                                     ),
                                                 ],
@@ -455,35 +480,18 @@ class _HomeTransactionState extends State<HomeTransaction> {
                               }
                             }
                             if (operation.hasError) {
-                              return const Text('has error accured');
+                              return const Text('');
                             }
                             if (operation.connectionState ==
                                 ConnectionState.waiting) {
-                              return const Text('has wait accured');
+                              return _waiting('Attente..!');
                             }
 
                             if (operation.data == 'null') {
-                              return const Text('has error null');
+                              return const Text('');
                             }
 
-                            return SizedBox(
-                              height: fullHeight(context) * .2,
-                              child: Column(
-                                children: const [
-                                  Icon(
-                                    Icons.cancel_outlined,
-                                    color: Colors.grey,size: 20,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Aucune donnée pour le moment...!',
-                                    style: TextStyle(color: Colors.grey),
-                                  )
-                                ],
-                              ), 
-                            );
+                            return const Text('');
                           },
                         ),
                       ),
@@ -492,48 +500,130 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 ))));
   }
 
+  Widget balanceCDF(context, cusromerId) {
+    return FutureBuilder<dynamic>(
+        future: transaction.getCdf(cusromerId),
+        builder: ((context, AsyncSnapshot<dynamic> cdf) {
+          if (cdf.hasData) {
+            if (cdf.data['result'][0]['balance'] != null) {
+              return Text(
+                "CDF ${cdf.data['result'][0]['balance'].toString()}",
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              );
+            }
+          }
+          return const Text('CDF 0.0',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+        }));
+  }
+
+  Widget balanceUSD(context, customerId) {
+    return FutureBuilder<dynamic>(
+        future: transaction.getUsd(customerId),
+        builder: ((context, AsyncSnapshot<dynamic> usd) {
+          if (usd.hasData) {
+            if (usd.data['result'][0]['balance'] != null) {
+              return Text(
+                "USD ${usd.data['result'][0]['balance'].toString()}",
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              );
+            }
+          }
+
+          return const Text('USD 0.0',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+        }));
+  }
+
   _addCredit() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Créditer compte'),
-            content: SizedBox(
-                width: fullWidth(context),
-                child: SingleChildScrollView(
-                  child: Column(children: [
-                    DropdownButton(
-                        hint: const Text('Devise'),
-                        value: newDeviseC,
-                        items: devise.map((dev) {
-                          return DropdownMenuItem(
-                            child: Text(dev),
-                            value: dev.toString(),
-                          );
-                        }).toList(),
-                        onChanged: (item) {
-                          setState(() {
-                            newDeviseC = item.toString();
-                            debugPrint(item.toString());
-                          });
-                        }),
-                    inputField(context, operationMount, 'Montant reçu',
-                        Icons.balance_sharp, TextInputType.number),
-                    inputField(context, operationDescription, 'Description',
-                        Icons.density_medium_sharp, TextInputType.text),
-                  ]),
-                )),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('ANNULER',
-                      style: TextStyle(color: greencolor))),
-              TextButton(
-                  onPressed: () => _oncreateCredit(),
-                  child: const Text('CREDITER COMPTE',
-                      style: TextStyle(color: greencolor)))
-            ],
-          );
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              title: const Text('Créditer compte'),
+              content: SizedBox(
+                  width: fullWidth(context),
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      SizedBox(
+                        width: fullHeight(context),
+                        child: DropdownButton(
+                            isExpanded: true,
+                            hint: const Text('Devise'),
+                            value: newDeviseC,
+                            items: devise.map((dev) {
+                              return DropdownMenuItem(
+                                child: Text(dev),
+                                value: dev.toString(),
+                              );
+                            }).toList(),
+                            onChanged: (item) {
+                              setState(() {
+                                newDeviseC = item.toString();
+                                debugPrint(item.toString());
+                              });
+                            }),
+                      ),
+                      inputField(context, operationMount, 'Montant reçu',
+                          Icons.balance_sharp, TextInputType.number),
+                      inputField(context, operationDescription, 'Description',
+                          Icons.density_medium_sharp, TextInputType.text),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          child: Material(
+                            elevation: 3,
+                            child: Container(
+                              decoration: const BoxDecoration(border: Border()),
+                              height: 46,
+                              child: TextField(
+                                readOnly: true,
+                                onTap: () async {
+                                  DateTime? pickerDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2002),
+                                      lastDate: DateTime(2102));
+                                  if (pickerDate != null) {
+                                    String formatted = DateFormat('yyy/MM/dd')
+                                        .format(pickerDate);
+                                    setState(() {
+                                      dateControllerC.text = formatted;
+                                    });
+                                  }
+                                },
+                                controller: dateControllerC,
+                                cursorColor: greencolor,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.calendar_month),
+                                  filled: true,
+                                  hintText: 'Date écheance',
+                                  border: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: greencolor)),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: greencolor)),
+                                ),
+                              ),
+                            ),
+                          ))
+                    ]),
+                  )),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('ANNULER',
+                        style: TextStyle(color: greencolor))),
+                TextButton(
+                    onPressed: () => _oncreateCredit(),
+                    child: const Text('CREDITER COMPTE',
+                        style: TextStyle(color: greencolor)))
+              ],
+            );
+          }));
         });
   }
 
@@ -541,81 +631,89 @@ class _HomeTransactionState extends State<HomeTransaction> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Décaisser l'argent"),
-            content: SizedBox(
-                width: fullWidth(context),
-                child: SingleChildScrollView(
-                  child: Column(children: [
-                    DropdownButton(
-                        hint: const Text('Devise'),
-                        value: newDeviseD,
-                        items: devise.map((dev) {
-                          return DropdownMenuItem(
-                            child: Text(dev),
-                            value: dev.toString(),
-                          );
-                        }).toList(),
-                        onChanged: (item) {
-                          setState(() {
-                            newDeviseD = item.toString();
-                            debugPrint(item.toString());
-                          });
-                        }),
-                    inputField(context, operationMount, 'Montant à decaisser',
-                        Icons.balance_sharp, TextInputType.number),
-                    inputField(context, operationDescription, 'Description',
-                        Icons.density_medium_sharp, TextInputType.text),
-                    Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 8),
-                        child: Material(
-                          elevation: 3,
-                          child: Container(
-                            decoration: const BoxDecoration(border: Border()),
-                            height: 46,
-                            child: TextField(
-                              readOnly: true,
-                              onTap: () async {
-                                DateTime? pickerDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2002),
-                                    lastDate: DateTime(2102));
-                                if (pickerDate != null) {
-                                  String formatted = DateFormat('yyy/MM/dd')
-                                      .format(pickerDate);
-                                  setState(() {
-                                    dateController.text = formatted;
-                                  });
-                                }
-                              },
-                              controller: dateController,
-                              cursorColor: greencolor,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.calendar_month),
-                                filled: true,
-                                hintText: 'Date écheance',
-                                border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: greencolor)),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: greencolor)),
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              title: const Text("Décaisser l'argent"),
+              content: SizedBox(
+                  width: fullWidth(context),
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      SizedBox(
+                        width: fullHeight(context),
+                        child: DropdownButton(
+                            isExpanded: true,
+                            hint: const Text('Devise'),
+                            value: newDeviseD,
+                            items: devise.map((dev) {
+                              return DropdownMenuItem(
+                                child: Text(dev),
+                                value: dev.toString(),
+                              );
+                            }).toList(),
+                            onChanged: (item) {
+                              setState(() {
+                                newDeviseD = item.toString();
+                                debugPrint(item.toString());
+                              });
+                            }),
+                      ),
+                      inputField(context, operationMount, 'Montant à decaisser',
+                          Icons.balance_sharp, TextInputType.number),
+                      inputField(context, operationDescription, 'Description',
+                          Icons.density_medium_sharp, TextInputType.text),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          child: Material(
+                            elevation: 3,
+                            child: Container(
+                              decoration: const BoxDecoration(border: Border()),
+                              height: 46,
+                              child: TextField(
+                                readOnly: true,
+                                onTap: () async {
+                                  DateTime? pickerDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2002),
+                                      lastDate: DateTime(2102));
+                                  if (pickerDate != null) {
+                                    String formatted = DateFormat('yyy/MM/dd')
+                                        .format(pickerDate);
+                                    setState(() {
+                                      dateControllerD.text = formatted;
+                                    });
+                                  }
+                                },
+                                controller: dateControllerD,
+                                cursorColor: greencolor,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.calendar_month),
+                                  filled: true,
+                                  hintText: 'Date écheance',
+                                  border: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: greencolor)),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: greencolor)),
+                                ),
                               ),
                             ),
-                          ),
-                        ))
-                  ]),
-                )),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('ANNULER',
-                      style: TextStyle(color: greencolor))),
-              TextButton(
-                  onPressed: () => _oncreateDebit(),
-                  child: const Text('DEBITER COMPTE',
-                      style: TextStyle(color: greencolor))),
-            ],
-          );
+                          ))
+                    ]),
+                  )),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('ANNULER',
+                        style: TextStyle(color: greencolor))),
+                TextButton(
+                    onPressed: () => _oncreateDebit(),
+                    child: const Text('DEBITER COMPTE',
+                        style: TextStyle(color: greencolor))),
+              ],
+            );
+          }));
         });
   }
 
@@ -641,5 +739,75 @@ class _HomeTransactionState extends State<HomeTransaction> {
         ],
       ),
     );
+  }
+
+  _waiting(message) {
+    return SizedBox(
+      width: fullWidth(context),
+      child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 16,
+                width: 15,
+                child: CircularProgressIndicator(
+                  strokeWidth: 1,
+                ),
+              ),
+              const SizedBox(
+                width: 9,
+              ),
+              Text(message)
+            ],
+          )),
+    );
+  }
+
+  _error(message) {
+    return SizedBox(
+        width: fullWidth(context),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.cancel,
+                size: 30,
+                color: Color.fromARGB(255, 158, 158, 158),
+              ),
+              const SizedBox(
+                height: 6,
+              ),
+              Text(message)
+            ],
+          ),
+        ));
+  }
+
+  _empty(message) {
+    return SizedBox(
+        width: fullWidth(context),
+        child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.person_add_disabled_outlined,
+                  size: 34,
+                  color: Color.fromARGB(255, 158, 158, 158),
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+                Text(message)
+              ],
+            )));
   }
 }

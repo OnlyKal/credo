@@ -18,13 +18,27 @@ class _HomeState extends State<Home> {
       TextEditingController(text: 'Partenaire');
 
   _onCreateCurstomer() {
-    newCustomer(curstomerName.text, curstomerPhone.text, curstomerDetails.text);
-    setState(() {
-      curstomerName.text = curstomerPhone.text = '';
-    });
+    if (curstomerName.text != '') {
+      if (curstomerPhone.text != '') {
+        if (curstomerDetails.text != '') {
+          newCustomer(
+              curstomerName.text, curstomerPhone.text, curstomerDetails.text);
+          setState(() {
+            curstomerName.text = curstomerPhone.text = '';
+          });
+        } else {
+          messageError('Ajouter une description..!');
+        }
+      } else {
+        messageError('Ajouter un numéro de téléphone..!');
+      }
+    } else {
+      messageError('Ajouter un nom..!');
+    }
   }
 
   Client customer = const Client();
+  Transaction transaction = const Transaction();
   @override
   void initState() {
     setState(() {
@@ -71,12 +85,12 @@ class _HomeState extends State<Home> {
                                   ],
                                 ),
                                 Row(children: [
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.notifications_active,
-                                        color: Colors.white,
-                                      )),
+                                  // IconButton(
+                                  //     onPressed: () {},
+                                  //     icon: const Icon(
+                                  //       Icons.notifications_active,
+                                  //       color: Colors.white,
+                                  //     )),
                                   if (searchBar == false)
                                     IconButton(
                                         onPressed: () => setState(
@@ -144,10 +158,10 @@ class _HomeState extends State<Home> {
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> curtomer) {
                       if (curtomer.hasError) {
-                        return _error('Erreur, données inaccessible..!');
+                        return _error('Données inaccessibles..!');
                       }
                       if (curtomer.connectionState == ConnectionState.none) {
-                        return const Text('No COnnnection');
+                        return _error('Une erreur est produite...!');
                       }
                       if (curtomer.connectionState == ConnectionState.waiting) {
                         return _waiting('Attente des données..');
@@ -159,20 +173,13 @@ class _HomeState extends State<Home> {
 
                             if (data.length == 0) {
                               return _empty(
-                                  'Désolé, aucun client identifiés...!');
+                                  'Désolé, aucun client identifié...!');
                             }
 
                             return ListView.builder(
                                 padding: EdgeInsets.zero,
                                 itemCount: curtomer.data['result'].length,
                                 itemBuilder: (context, i) {
-                                  // List list = data.toList();
-                                  // list.sort((a, b) {
-                                  //   return a['name']
-                                  //       .toLowerCase()
-                                  //       .compareTo(b['name'].toLowerCase());
-                                  // });
-
                                   return GestureDetector(
                                     onTap: () => goto(context,
                                         HomeTransaction(customer: data[i])),
@@ -199,9 +206,14 @@ class _HomeState extends State<Home> {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        const Icon(
-                                                          Icons.person,
-                                                          color: greencolor,
+                                                        const CircleAvatar(
+                                                          backgroundColor:
+                                                              greencolor,
+                                                          child: Icon(
+                                                            Icons
+                                                                .folder_shared_rounded,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
                                                         const SizedBox(
                                                           width: 7,
@@ -256,57 +268,13 @@ class _HomeState extends State<Home> {
                                                           MainAxisAlignment
                                                               .spaceAround,
                                                       children: [
-                                                        double.parse(data[i][
-                                                                        'cdfBalance']
-                                                                    .toString()) ==
-                                                                0.07
-                                                            ? const Text('')
-                                                            : Text(
-                                                                'CDF ${data[i]['cdfBalance'].toString()}',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: double.parse(data[i]['cdfBalance']
-                                                                                .toString()) >=
-                                                                            0.0
-                                                                        ? Colors
-                                                                            .amber
-                                                                        : const Color.fromARGB(
-                                                                            255,
-                                                                            241,
-                                                                            39,
-                                                                            39),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500),
-                                                              ),
+                                                        balanceCDF(context,
+                                                            data[i]['id']),
                                                         const SizedBox(
                                                           height: 4,
                                                         ),
-                                                        double.parse(data[i][
-                                                                        'usdBalance']
-                                                                    .toString()) ==
-                                                                0.04
-                                                            ? const Text('')
-                                                            : Text(
-                                                                'USD ${data[i]['usdBalance'].toString()}',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: double.parse(data[i]['usdBalance']
-                                                                                .toString()) >=
-                                                                            0.0
-                                                                        ? Colors
-                                                                            .blueAccent
-                                                                        : const Color.fromARGB(
-                                                                            255,
-                                                                            241,
-                                                                            39,
-                                                                            39),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500),
-                                                              ),
+                                                        balanceUSD(context,
+                                                            data[i]['id'])
                                                       ],
                                                     )
                                                   ],
@@ -326,7 +294,7 @@ class _HomeState extends State<Home> {
                           }
                         }
                       }
-                      return _error('Erreur, données inaccessible..!');
+                      return _error('Aucune donnée trouvée...!');
                     }),
               )),
             ]),
@@ -400,6 +368,62 @@ class _HomeState extends State<Home> {
         ));
   }
 
+  Widget balanceCDF(context, cusromerId) {
+    return FutureBuilder<dynamic>(
+        future: transaction.getCdf(cusromerId),
+        builder: ((context, AsyncSnapshot<dynamic> cdf) {
+          if (cdf.hasData) {
+            if (cdf.data['result'][0]['balance'] != null) {
+              return cdf.data['result'][0]['balance'] == 0.0776877
+                  ? const Text('')
+                  : Text(
+                      'CDF ${cdf.data['result'][0]['balance'].toString()}',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: cdf.data['result'][0]['balance'] >= 0.0
+                              ? Colors.amber
+                              : const Color.fromARGB(255, 241, 39, 39),
+                          fontWeight: FontWeight.w500),
+                    );
+            }
+          }
+
+          return const Text(
+            'CDF 0.0',
+            style: TextStyle(
+                color: Color.fromARGB(255, 104, 104, 104), fontSize: 12),
+          );
+        }));
+  }
+
+  Widget balanceUSD(context, customerId) {
+    return FutureBuilder<dynamic>(
+        future: transaction.getUsd(customerId),
+        builder: ((context, AsyncSnapshot<dynamic> usd) {
+          if (usd.hasData) {
+            if (usd.data['result'][0]['balance'] != null) {
+              return usd.data['result'][0]['balance'] == 0.070987654567
+                  ? const Text('')
+                  : Text(
+                      'USD ${usd.data['result'][0]['balance'].toString()}',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: usd.data['result'][0]['balance'] >= 0.0
+                              ? Colors.blueAccent
+                              : const Color.fromARGB(255, 241, 39, 39),
+                          fontWeight: FontWeight.w500),
+                    );
+            }
+          }
+
+          return const Text(
+            'USD 0.0',
+            style: TextStyle(
+                color: Color.fromARGB(255, 104, 104, 104), fontSize: 12),
+          );
+        }));
+  }
+
   Widget cursotmerForder(context, customerName, curstomerBalance) {
     return Container(
       child: Padding(
@@ -438,58 +462,65 @@ class _HomeState extends State<Home> {
   }
 
   _waiting(message) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 16,
-          width: 15,
-          child: CircularProgressIndicator(
-            strokeWidth: 1,
-          ),
-        ),
-        const SizedBox(
-          width: 9,
-        ),
-        Text(message)
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 16,
+              width: 15,
+              child: CircularProgressIndicator(
+                strokeWidth: 1,
+              ),
+            ),
+            const SizedBox(
+              width: 9,
+            ),
+            Text(message)
+          ],
+        ));
   }
 
   _error(message) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.cloud_off,
-          size: 26,
-          color: Color.fromARGB(255, 158, 158, 158),
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        Text(message)
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.cancel,
+            size: 30,
+            color: Color.fromARGB(255, 158, 158, 158),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          Text(message)
+        ],
+      ),
     );
   }
 
   _empty(message) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.person_add_disabled_outlined,
-          size: 34,
-          color: Color.fromARGB(255, 158, 158, 158),
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        Text(message)
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Icon(
+              Icons.person_add_disabled_outlined,
+              size: 34,
+              color: Color.fromARGB(255, 158, 158, 158),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            Text(message)
+          ],
+        ));
   }
 }
