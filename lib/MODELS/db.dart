@@ -47,9 +47,9 @@ class Db {
         conflictAlgorithm: ConflictAlgorithm.replace);
     debugPrint(result.toString());
     if (result > 0) {
-      return {"type": "success", "message": "Enregistrement effectuer"};
+      return {"type": "success", "message": "Opération reussie !"};
     } else {
-      return {"type": "failure", "message": "Echec d'enregistrement"};
+      return {"type": "failure", "message": "Désolé , Opération echouée !"};
     }
   }
 
@@ -65,9 +65,9 @@ class Db {
     final int result =
         await db.update(table, values, where: where, whereArgs: whereArgs);
     if (result > 0) {
-      return {"type": "success", "message": "Modification effectuer"};
+      return {"type": "success", "message": "Modification reussie"};
     } else {
-      return {"type": "failure", "message": "Quelque chose s'est mal passé"};
+      return {"type": "failure", "message": "Désolé , Opération echouée !"};
     }
   }
 
@@ -82,7 +82,7 @@ class Db {
     if (result.isNotEmpty) {
       return {"type": "success", "result": result.toList()};
     } else {
-      return {"type": "failure", "message": "Quelque chose s'est mal passé"};
+      return {"type": "failure", "message": "Désolé , échec de la recupération de données !"};
     }
   }
 
@@ -98,9 +98,9 @@ class Db {
         await db.rawInsert('INSERT INTO $table($field) VALUES($args)');
 
     if (result > 0) {
-      return {"type": "success", "message": "Enregistrement effectuer"};
+      return {"type": "success", "message": "Opération reussie !"};
     } else {
-      return {"type": "failure", "message": "Quelque chose s'est mal passé"};
+      return {"type": "failure", "message": "Désolé , Opération echouée !"};
     }
   }
 
@@ -115,9 +115,9 @@ class Db {
     final int result =
         await db.delete(table, where: where, whereArgs: whereArgs);
     if (result > 0) {
-      return {"type": "success", "message": "Suppression effectuer"};
+      return {"type": "success", "message": "Opération reussie !"};
     } else {
-      return {"type": "failure", "message": "Quelque chose s'est mal passé"};
+      return {"type": "failure", "message": "Désolé , Opération echouée !"};
     }
   }
 }

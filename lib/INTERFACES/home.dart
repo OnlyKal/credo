@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
@@ -37,12 +38,38 @@ class _HomeState extends State<Home> {
     }
   }
 
+  var _filter = 'name';
+  _onFilterClientByName() {
+    setState(() {
+      _filter = 'name';
+    });
+  }
+
+  _onFilterClientById() {
+    setState(() {
+      _filter = 'Id';
+    });
+  }
+
+  _onFilterClientByDetail() {
+    setState(() {
+      _filter = 'description';
+    });
+  }
+
+  var _inverse = 'ASC';
+  _onFilter() {
+    setState(() {
+      _inverse == 'ASC' ? _inverse = 'DESC' : _inverse = 'ASC';
+    });
+  }
+
   Client customer = const Client();
   Transaction transaction = const Transaction();
   @override
   void initState() {
     setState(() {
-      customer.get();
+      customer.get(_filter, _inverse);
     });
     super.initState();
   }
@@ -56,105 +83,161 @@ class _HomeState extends State<Home> {
             height: fullHeight(context),
             width: fullWidth(context),
             child: Column(children: [
-              SizedBox(
-                width: fullWidth(context),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: paddingTop(context),
-                      ),
-                      SizedBox(
-                        height: fullHeight(context) * 0.07,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: const [
-                                    Text(
-                                      'Credo',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 29,
-                                          color: greencolor),
-                                    ),
-                                  ],
-                                ),
-                                Row(children: [
-                                  // IconButton(
-                                  //     onPressed: () {},
-                                  //     icon: const Icon(
-                                  //       Icons.notifications_active,
-                                  //       color: Colors.white,
-                                  //     )),
-                                  if (searchBar == false)
-                                    IconButton(
-                                        onPressed: () => setState(
-                                            () => searchBar = !searchBar),
-                                        icon: const Icon(
-                                          Icons.search_rounded,
-                                          color: Colors.white,
-                                        )),
-                                ])
-                              ],
-                            )),
-                      ),
-                      if (searchBar != true)
-                        Container(
-                          color: greencolor,
-                          height: 4,
-                        )
-                      else
-                        Container(
-                          color: greencolor,
-                          height: fullHeight(context) * 0.06,
+              StatefulBuilder(builder: ((context, setState) {
+                return SizedBox(
+                  width: fullWidth(context),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: paddingTop(context),
+                        ),
+                        SizedBox(
+                          height: fullHeight(context) * 0.07,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 13, right: 13),
-                            child: TextField(
-                              controller: seachcontroller,
-                              onChanged: (value) {
-                                setState(() {
-                                  _searchResult = value.toString();
-                                  if (seachcontroller.text == '') {
-                                    searchBar = false;
-                                  }
-                                });
-                              },
-                              decoration: InputDecoration(
-                                  hintText: 'Recherche client',
-                                  prefixIcon: IconButton(
-                                      onPressed: () => setState(() {
-                                            searchBar = !searchBar;
-                                            if (searchBar == false) {
-                                              seachcontroller.text = '';
-                                            }
-                                          }),
-                                      icon: const Icon(
-                                        Icons.search_rounded,
-                                        color: Colors.white,
-                                      )),
-                                  enabledBorder: const UnderlineInputBorder(
-                                      borderSide: BorderSide.none),
-                                  border: const UnderlineInputBorder(
-                                      borderSide: BorderSide.none),
-                                  focusedBorder: const UnderlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          ),
-                        )
-                    ]),
-              ),
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: const [
+                                      Text(
+                                        'Credo',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 24,
+                                          color: greencolor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(children: [
+                                    if (searchBar == false)
+                                      IconButton(
+                                          onPressed: () => setState(
+                                              () => searchBar = !searchBar),
+                                          icon: const Icon(
+                                            Icons.search_rounded,
+                                            color: Color.fromARGB(
+                                                255, 179, 178, 178),
+                                          )),
+                                  ])
+                                ],
+                              )),
+                        ),
+                        if (searchBar != true)
+                          Container(
+                            color: greencolor,
+                            height: 4,
+                          )
+                        else
+                          Container(
+                              color: greencolor,
+                              height: fullHeight(context) * 0.18,
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 13, right: 13),
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                        controller: seachcontroller,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _searchResult = value.toString();
+                                            if (seachcontroller.text == '') {}
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                            hintText: 'Recherche....',
+                                            prefixIcon: IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    searchBar = !searchBar;
+                                                    if (searchBar == false) {
+                                                      seachcontroller.text = '';
+                                                    }
+                                                  });
+                                                },
+                                                icon: const Icon(
+                                                  Icons.arrow_back,
+                                                  color: Colors.white,
+                                                )),
+                                            enabledBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide.none),
+                                            border: const UnderlineInputBorder(
+                                                borderSide: BorderSide.none),
+                                            focusedBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide:
+                                                        BorderSide.none)),
+                                      ),
+                                      const SizedBox(
+                                        height: 4,
+                                      ),
+                                      Row(
+                                        children: [
+                                          searchBtn(
+                                              _inverse == 'ASC'
+                                                  ? Icons
+                                                      .vertical_align_bottom_sharp
+                                                  : Icons
+                                                      .vertical_align_top_sharp,
+                                              _inverse == 'ASC'
+                                                  ? 'Ascendent'
+                                                  : 'Descendant',
+                                              _onFilter),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          searchBtn(
+                                              Icons.card_membership_rounded,
+                                              'Identification',
+                                              _onFilterClientById),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          searchBtn(
+                                              Icons.align_vertical_center,
+                                              'Détail',
+                                              _onFilterClientByDetail),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          searchBtn(
+                                              Icons.person_outline_rounded,
+                                              'Noms',
+                                              _onFilterClientByName),
+                                        ],
+                                      )
+                                    ],
+                                  )))
+                      ]),
+                );
+              })),
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.only(left: 17, right: 17),
                 child: FutureBuilder<dynamic>(
                     future: _searchResult != ''
                         ? customer.getLike(_searchResult)
-                        : customer.get(),
+                        : customer.get(_filter, _inverse),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> curtomer) {
                       if (curtomer.hasError) {
@@ -164,7 +247,7 @@ class _HomeState extends State<Home> {
                         return _error('Une erreur est produite...!');
                       }
                       if (curtomer.connectionState == ConnectionState.waiting) {
-                        return _waiting('Attente des données..');
+                        return const Text('');
                       }
                       if (curtomer.connectionState == ConnectionState.done) {
                         if (curtomer.hasData) {
@@ -366,6 +449,60 @@ class _HomeState extends State<Home> {
             color: Colors.white,
           ),
         ));
+  }
+
+  Widget searchBtn(icon, title, event) {
+    return SizedBox(
+        height: 35,
+        child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+                elevation: 0.3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                backgroundColor: Color.fromARGB(181, 62, 242, 224)),
+            onPressed: event,
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 16,
+                  color: const Color.fromARGB(255, 182, 250, 242),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  title,
+                  style: const TextStyle(color: Colors.white),
+                )
+              ],
+            )));
+
+    // GestureDetector(
+    //   behavior: HitTestBehavior.translucent,
+    //   onTap: event,
+    //   child: Container(
+    //     height: 35,
+    //     decoration: BoxDecoration(
+    //         color: const Color.fromARGB(181, 7, 234, 211),
+    //         borderRadius: BorderRadius.circular(15)),
+    //     child: Padding(
+    //         padding: const EdgeInsets.only(left: 10, right: 10),
+    //         child: Row(
+    //           children: [
+    //             Icon(
+    //               icon,
+    //               size: 16,
+    //               color: const Color.fromARGB(255, 162, 245, 236),
+    //             ),
+    //             const SizedBox(
+    //               width: 6,
+    //             ),
+    //             Text(title)
+    //           ],
+    //         )),
+    //   ),
+    // );
   }
 
   Widget balanceCDF(context, cusromerId) {

@@ -41,9 +41,9 @@ class Client {
     return db.add("clients", toMapWithId());
   }
 
-  Future get() {
+  Future get(filter,inverse) {
     Db db = Db();
-    return db.fetch("SELECT * FROM clients ORDER BY name ASC");
+    return db.fetch("SELECT * FROM clients ORDER BY $filter $inverse");
   }
 
   Future getById(int id) {

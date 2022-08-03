@@ -179,12 +179,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                           'Situation des opérations',
                                                           style: TextStyle(
                                                               fontSize: 15,
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      138,
-                                                                      248,
-                                                                      237)),
+                                                              color: Color.fromARGB(255, 195, 251, 245)),
                                                         ),
                                                         Image(
                                                             height: 70,
