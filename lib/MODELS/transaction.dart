@@ -64,16 +64,27 @@ class Transaction {
       "SELECT * FROM transactions where clientId=$id",
     );
   }
+
   Future getUsd(int id) {
     Db db = Db();
     return db.fetch(
       "SELECT (sum (usdDebit)-sum(usdCredit)) as balance FROM transactions where clientId=$id",
     );
   }
+
   Future getCdf(int id) {
     Db db = Db();
     return db.fetch(
       "SELECT (sum(cdfDebit)-sum(cdfCredit)) as balance FROM transactions where clientId=$id",
+    );
+  }
+
+  Future getCredit() {
+    Db db = Db();
+    DateTime now = DateTime.now();
+    String date1 = now.toString();
+    return db.fetch(
+      "SELECT clients.id,clients.name,clients.phoneNumber FROM transactions INNER JOIN clients ON clients.id=transactions.clientId WHERE paymentDate=$date1",
     );
   }
 }
