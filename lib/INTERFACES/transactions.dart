@@ -1,6 +1,7 @@
 import 'package:credo/EXPORTS/exports.files.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class HomeTransaction extends StatefulWidget {
   final customer;
@@ -28,10 +29,10 @@ class _HomeTransactionState extends State<HomeTransaction> {
     if (operationMount.text != '') {
       if (dateControllerD.text != '') {
         if (newDeviseD == 'USD') {
-          addUSDdedit(operationMount.text, widget.customer['id'],
-              dateControllerD.text, operationDescription.text, 'usdD');
+          addUSDebit(operationMount.text, widget.customer['id'],
+              operationDescription.text, 'usdD', dateControllerD.text);
         } else {
-          addCDFdebit(operationMount.text, widget.customer['id'],
+          addCDFDebit(operationMount.text, widget.customer['id'],
               dateControllerD.text, operationDescription.text, 'cdfD');
         }
         setState(() {
@@ -50,11 +51,11 @@ class _HomeTransactionState extends State<HomeTransaction> {
     if (operationMount.text != '') {
       if (dateControllerC.text != '') {
         if (newDeviseC == 'USD') {
-          addUSDcrebit(operationMount.text, widget.customer['id'],
+          addUSDCredit(operationMount.text, widget.customer['id'],
               operationDescription.text, 'usdC', dateControllerC.text);
         } else {
-          addCDFcrebit(operationMount.text, widget.customer['id'],
-              operationDescription.text, 'cdfC', dateControllerC.text);
+          addCDFCredit(operationMount.text, widget.customer['id'],
+              dateControllerC.text, operationDescription.text, 'cdfC');
         }
         setState(() {
           operationMount.text = dateControllerC.text = '';
@@ -174,24 +175,24 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
-                                                      children: const [
-                                                        Text(
+                                                      children: [
+                                                        const Text(
                                                           'Situation des opérations',
                                                           style: TextStyle(
                                                               fontSize: 15,
-                                                              color: Color.fromARGB(255, 195, 251, 245)),
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      195,
+                                                                      251,
+                                                                      245)),
                                                         ),
-                                                        Image(
-                                                            height: 70,
-                                                            width: 70,
-                                                            image: AssetImage(
-                                                              'assets/images/45000.png',
-                                                            ))
+                                                        Image.asset(
+                                                          'assets/images/45000.png',
+                                                          height: 50,
+                                                        )
                                                       ]),
                                                   Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
                                                     children: [
                                                       balanceCDF(
                                                           context,
@@ -200,12 +201,10 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                       const SizedBox(
                                                         width: 10,
                                                       ),
-                                                      const Text(''),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      balanceUSD(context,
-                                                          widget.customer['id'])
+                                                      balanceUSD(
+                                                          context,
+                                                          widget
+                                                              .customer['id']),
                                                     ],
                                                   )
                                                 ]))),
@@ -247,6 +246,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                               AsyncSnapshot<dynamic> operation) {
                             if (operation.hasData) {
                               if (operation.data['type'] == 'success') {
+                                // debugPrint(operation.data.toString());
                                 return ListView.builder(
                                     padding: EdgeInsets.zero,
                                     itemCount: operation.data['result'].length,
@@ -284,7 +284,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                       'typeOp'] ==
                                                                   'cdfD'
                                                           ? const Text(
-                                                              'Debit',
+                                                              'Debit ',
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -343,7 +343,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                     'typeOp'] ==
                                                                 'usdD'
                                                             ? Text(
-                                                                'usd ${operation.data['result'][i]['usdCredit']}',
+                                                                'usd ${operation.data['result'][i]['usdDebit']}',
                                                                 style: const TextStyle(
                                                                     color: Color
                                                                         .fromARGB(
@@ -356,7 +356,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                             .bold),
                                                               )
                                                             : Text(
-                                                                'cdf ${operation.data['result'][i]['cdfCredit']}',
+                                                                'cdf ${operation.data['result'][i]['cdfDebit']}',
                                                                 style: const TextStyle(
                                                                     color: Color
                                                                         .fromARGB(
@@ -408,7 +408,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                     'typeOp'] ==
                                                                 'usdC'
                                                             ? Text(
-                                                                'usd ${operation.data['result'][i]['usdDebit']}',
+                                                                'usd ${operation.data['result'][i]['usdCredit']}',
                                                                 style: const TextStyle(
                                                                     color: Color
                                                                         .fromARGB(
@@ -421,7 +421,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                             .bold),
                                                               )
                                                             : Text(
-                                                                'cdf ${operation.data['result'][i]['cdfDebit']}',
+                                                                'cdf ${operation.data['result'][i]['cdfCredit']}',
                                                                 style: const TextStyle(
                                                                     color: Color
                                                                         .fromARGB(
@@ -495,21 +495,80 @@ class _HomeTransactionState extends State<HomeTransaction> {
                 ))));
   }
 
+  Widget _chart(context, cdfBalance) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 70,
+          width: 70,
+          child: PieChart(PieChartData(
+              sectionsSpace: 2.0,
+              sections: [
+                PieChartSectionData(
+                    color: Colors.blueGrey,
+                    value: 4.4,
+                    radius: 20.0,
+                    title: ''),
+                PieChartSectionData(
+                  color: Colors.amber,
+                  value: 4.4,
+                  radius: 20.0,
+                  title: '',
+                )
+              ],
+              centerSpaceRadius: 5.0)),
+        ),
+        cdfBalance,
+      ],
+    );
+  }
+
   Widget balanceCDF(context, cusromerId) {
     return FutureBuilder<dynamic>(
         future: transaction.getCdf(cusromerId),
         builder: ((context, AsyncSnapshot<dynamic> cdf) {
           if (cdf.hasData) {
+            debugPrint(cdf.data['result'].toString());
             if (cdf.data['result'][0]['balance'] != null) {
-              return Text(
-                "CDF ${cdf.data['result'][0]['balance'].toString()}",
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // SizedBox(
+                  //   height: 70,
+                  //   width: 70,
+                  //   child: PieChart(PieChartData(
+                  //       sectionsSpace: 2.0,
+                  //       sections: [
+                  //         PieChartSectionData(
+                  //             color: const Color.fromARGB(255, 207, 6, 6),
+                  //             value: 33.0,
+                  // value: cdf.data['result'][0]['cdfDebit'],
+                  //     radius: 20.0,
+                  //     title: ''),
+                  // PieChartSectionData(
+                  //   color: Colors.amber,
+                  // value: cdf.data['result'][0]['cdfCredit'],
+                  //           value: 89.0,
+                  //           radius: 20.0,
+                  //           title: '',
+                  //         )
+                  //       ],
+                  //       centerSpaceRadius: 5.0)),
+                  // ),
+                  Text(
+                    "CDF ${cdf.data['result'][0]['balance'].toString()}",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w900),
+                  ),
+                ],
               );
             }
           }
           return const Text('CDF 0.0',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
         }));
   }
 
@@ -518,17 +577,46 @@ class _HomeTransactionState extends State<HomeTransaction> {
         future: transaction.getUsd(customerId),
         builder: ((context, AsyncSnapshot<dynamic> usd) {
           if (usd.hasData) {
+            debugPrint(usd.data['result'].toString());
             if (usd.data['result'][0]['balance'] != null) {
-              return Text(
-                "USD ${usd.data['result'][0]['balance'].toString()}",
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // SizedBox(
+                  //   height: 70,
+                  //   width: 70,
+                  //   child: PieChart(PieChartData(
+                  //       sectionsSpace: 2.0,
+                  //       sections: [
+                  //         PieChartSectionData(
+                  // color: const Color.fromARGB(255, 206, 4, 4),
+                  // value: usd.data['result'][0]['usdDebit'],
+                  // value: 13,
+                  // radius: 20.0,
+                  // title: ''),
+                  // PieChartSectionData(
+                  //   color: Colors.amber,
+                  // value: usd.data['result'][0]['usdCredit'],
+                  //           value: 14,
+                  //           radius: 20.0,
+                  //           title: '',
+                  //         )
+                  //       ],
+                  //       centerSpaceRadius: 5.0)),
+                  // ),
+                  Text(
+                    "USD ${usd.data['result'][0]['balance'].toString()}",
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.w900),
+                  ),
+                ],
               );
             }
           }
 
           return const Text('USD 0.0',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold));
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold));
         }));
   }
 

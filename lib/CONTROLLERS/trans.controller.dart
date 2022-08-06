@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../EXPORTS/exports.files.dart';
 
-Future addUSDdedit(
+Future addCDFDebit(
     mountUSD, customerId, datePayement, description, typeOp) async {
   Transaction transaction = Transaction(
       usdDebit: 0.0,
-      cdfCredit: 0.0,
-      cdfDebit: 0.0,
-      usdCredit: double.parse(mountUSD),
+      cdfCredit:0.0,
+      cdfDebit:double.parse(mountUSD) ,
+      usdCredit: 0.0,
       clientId: customerId,
       paymentDate: datePayement,
       description: description,
@@ -22,7 +21,7 @@ Future addUSDdedit(
   });
 }
 
-Future addCDFdebit(
+Future addCDFCredit(
     mountCDF, customerId, datePayement, description, typeOp) async {
   Transaction transaction = Transaction(
       usdDebit: 0.0,
@@ -42,7 +41,7 @@ Future addCDFdebit(
   });
 }
 
-Future addUSDcrebit(mountUSD, customerId, description, typeOp,datePayement) async {
+Future addUSDebit(mountUSD, customerId, description, typeOp,datePayement) async {
   Transaction transaction = Transaction(
       usdDebit: double.parse(mountUSD),
       cdfCredit: 0.0,
@@ -61,12 +60,12 @@ Future addUSDcrebit(mountUSD, customerId, description, typeOp,datePayement) asyn
   });
 }
 
-Future addCDFcrebit(mountCDF, customerId, description, typeOp,datePayement) async {
+Future addUSDCredit(mountCDF, customerId, description, typeOp,datePayement) async {
   Transaction transaction = Transaction(
       usdDebit: 0.0,
       cdfCredit: 0.0,
-      cdfDebit: double.parse(mountCDF),
-      usdCredit: 0.0,
+      cdfDebit: 0.0,
+      usdCredit: double.parse(mountCDF),
       clientId: customerId,
       paymentDate: datePayement,
       description: description,

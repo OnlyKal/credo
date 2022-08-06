@@ -68,13 +68,13 @@ class Transaction {
   Future getUsd(int id) {
     Db db = Db();
     return db.fetch(
-      "SELECT (sum (usdDebit)-sum(usdCredit)) as balance FROM transactions where clientId=$id",
+      "SELECT (sum (usdDebit)-sum(usdCredit)) as balance,usdDebit,usdCredit FROM transactions where clientId=$id",
     );
   }
   Future getCdf(int id) {
     Db db = Db();
     return db.fetch(
-      "SELECT (sum(cdfDebit)-sum(cdfCredit)) as balance FROM transactions where clientId=$id",
+      "SELECT (sum(cdfDebit)-sum(cdfCredit)) as balance,cdfDebit,cdfCredit FROM transactions where clientId=$id",
     );
   }
 }
