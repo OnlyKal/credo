@@ -48,6 +48,17 @@ class Transaction {
     };
   }
 
+  Object update() {
+    Db db = Db();
+    if (id != null) {
+      return db.update("transactions", toMapWithId(), 'id=?', [id]);
+    } else {
+      return {
+        "type": "failure",
+        "message": "Echec de modification l'id est introuvable"
+      };
+    }
+  }
   Future<Map<String, dynamic>> add() {
     Db db = Db();
     return db.add("transactions", toMapWithId());
@@ -71,10 +82,20 @@ class Transaction {
       "SELECT (sum (usdDebit)-sum(usdCredit)) as balance,usdDebit,usdCredit FROM transactions where clientId=$id",
     );
   }
+
   Future getCdf(int id) {
     Db db = Db();
     return db.fetch(
       "SELECT (sum(cdfDebit)-sum(cdfCredit)) as balance,cdfDebit,cdfCredit FROM transactions where clientId=$id",
+    );
+  }
+
+  Future getCredit() {
+    Db db = Db();
+    DateTime now = DateTime.now();
+    String date1 = now.toString();
+    return db.fetch(
+      "SELECT clients.id,clients.name,clients.phoneNumber FROM transactions INNER JOIN clients ON clients.id=transactions.clientId WHERE paymentDate=$date1",
     );
   }
 }
