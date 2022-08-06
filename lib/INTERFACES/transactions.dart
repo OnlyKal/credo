@@ -189,7 +189,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                         ),
                                                         Image.asset(
                                                           'assets/images/45000.png',
-                                                          height: 50,
+                                                          height: 52,
                                                         )
                                                       ]),
                                                   Row(
