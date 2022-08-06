@@ -48,6 +48,17 @@ class Transaction {
     };
   }
 
+  Object update() {
+    Db db = Db();
+    if (id != null) {
+      return db.update("transactions", toMapWithId(), 'id=?', [id]);
+    } else {
+      return {
+        "type": "failure",
+        "message": "Echec de modification l'id est introuvable"
+      };
+    }
+  }
   Future<Map<String, dynamic>> add() {
     Db db = Db();
     return db.add("transactions", toMapWithId());
