@@ -90,12 +90,12 @@ class Transaction {
     );
   }
 
-  Future getCredit() {
+  Future getCredit(paydate) {
     Db db = Db();
     DateTime now = DateTime.now();
     String date1 = now.toString();
     return db.fetch(
-      "SELECT clients.id,clients.name,clients.phoneNumber FROM transactions INNER JOIN clients ON clients.id=transactions.clientId WHERE paymentDate=$date1",
+      "SELECT clients.id,clients.name,clients.phoneNumber FROM transactions INNER JOIN clients ON clients.id=transactions.clientId WHERE paymentDate=$paydate",
     );
   }
 }

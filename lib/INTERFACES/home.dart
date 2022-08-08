@@ -263,7 +263,7 @@ class _HomeState extends State<Home> {
                                 padding: EdgeInsets.zero,
                                 itemCount: curtomer.data['result'].length,
                                 itemBuilder: (context, i) {
-                                  return GestureDetector(
+                                  return InkWell(
                                     onTap: () => goto(context,
                                         HomeTransaction(customer: data[i])),
                                     child: Column(
