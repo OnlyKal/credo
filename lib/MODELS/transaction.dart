@@ -89,6 +89,19 @@ class Transaction {
       "SELECT (sum(cdfDebit)-sum(cdfCredit)) as balance FROM transactions where clientId=$id",
     );
   }
+  Future getGlobalUsd() {
+    Db db = Db();
+    return db.fetch(
+      "SELECT (sum (usdDebit)-sum(usdCredit)) as balance FROM transactions",
+    );
+  }
+
+  Future getGlobalCdf() {
+    Db db = Db();
+    return db.fetch(
+      "SELECT (sum(cdfDebit)-sum(cdfCredit)) as balance FROM transactions",
+    );
+  }
 
   Future getCredit() {
     Db db = Db();
