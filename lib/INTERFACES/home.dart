@@ -1,3 +1,5 @@
+import 'package:credo/CONFIG/func.dart';
+import 'package:credo/INTERFACES/history.dart';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -63,12 +65,10 @@ class _HomeState extends State<Home> {
     });
   }
 
+  var _checkSession;
+
   Client customer = const Client();
   Transaction transaction = const Transaction();
-
-  _getPermission() async {
-    // await PerformanceOverlay??
-  }
 
   @override
   void initState() {
@@ -77,6 +77,18 @@ class _HomeState extends State<Home> {
     });
 
     super.initState();
+  }
+
+  onpenDrw() {
+    setState(() {
+      session();
+    });
+    _scaffoldKey.currentState?.openDrawer();
+    createFolders();
+  }
+
+  Future<void> session() async {
+    _checkSession = await readSession();
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -109,8 +121,7 @@ class _HomeState extends State<Home> {
                           child: Row(
                             children: [
                               IconButton(
-                                  onPressed: () =>
-                                      _scaffoldKey.currentState?.openDrawer(),
+                                  onPressed: () => onpenDrw(),
                                   icon: const Icon(Icons.format_align_justify)),
                               const SizedBox(
                                 width: 12,
@@ -253,7 +264,7 @@ class _HomeState extends State<Home> {
             }),
             Expanded(
                 child: Padding(
-              padding: const EdgeInsets.only(left: 17, right: 17),
+              padding: const EdgeInsets.only(left: 0, right: 0),
               child: FutureBuilder<dynamic>(
                   future: _searchResult != ''
                       ? customer.getLike(_searchResult)
@@ -290,8 +301,9 @@ class _HomeState extends State<Home> {
                                       const SizedBox(
                                         height: 15,
                                       ),
-                                      SizedBox(
-                                        height: fullHeight(context) * .06,
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        height: 60,
                                         width: fullWidth(context),
                                         child: Column(
                                             crossAxisAlignment:
@@ -403,68 +415,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: greencolor,
-        onPressed: () {
-          curstomerName.text = '';
-          curstomerPhone.text = '';
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return StatefulBuilder(builder: (context, localState) {
-                  return AlertDialog(
-                    title: const Text('Nouveau client'),
-                    content: SizedBox(
-                        width: fullWidth(context),
-                        height: fullHeight(context) * 0.28,
-                        child: SingleChildScrollView(
-                          child: Column(children: [
-                            InkWell(
-                                onTap: () async {
-                                  final contact =
-                                      await FlutterContacts.openExternalPick();
-                                  localState(() {
-                                    curstomerName.text =
-                                        (contact?.displayName).toString();
-                                    curstomerPhone.text =
-                                        (contact?.phones.first.number)
-                                            .toString()
-                                            .replaceAll(' ', '');
-                                    print(contact.toString());
-                                  });
-                                },
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.add_circle_outline_rounded,
-                                      color: greencolor,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text('Contacts')
-                                  ],
-                                )),
-                            inputField(context, curstomerName, 'Noms du client',
-                                Icons.person, TextInputType.text),
-                            inputField(context, curstomerPhone, 'Téléphone',
-                                Icons.phone, TextInputType.number),
-                            inputField(context, curstomerDetails, 'Description',
-                                Icons.density_medium_sharp, TextInputType.text),
-                          ]),
-                        )),
-                    actions: [
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('ANNULER',
-                              style: TextStyle(color: greencolor))),
-                      TextButton(
-                          onPressed: _onCreateCurstomer,
-                          child: const Text('AJOUTER',
-                              style: TextStyle(color: greencolor)))
-                    ],
-                  );
-                });
-              });
-        },
+        onPressed: () => addClientLog(),
         child: const Icon(
           Icons.person_add_alt_outlined,
           color: Colors.white,
@@ -490,7 +441,8 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
               onTap: () {
-                Navigator.pop(context);
+                back(context);
+                addClientLog();
               },
             ),
             ListTile(
@@ -502,10 +454,29 @@ class _HomeState extends State<Home> {
                 'Solde Franc',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
-              trailing: const Text(
-                'CDF 66.000',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-              ),
+              trailing: FutureBuilder(
+                  future: _checkSession != null
+                      ? transaction.getCdf(int.parse(_checkSession['SESSION']))
+                      : null,
+                  builder: ((context, AsyncSnapshot soldF) {
+                    if (soldF.hasData) {
+                      if (soldF.data != null) {
+                        var balance = soldF.data['result'][0]['balance'];
+                        return Text(
+                          'CDF ${balance == null ? '0.0' : balance.toString()}',
+                          style: TextStyle(
+                              color: balance == null
+                                  ? Colors.grey
+                                  : balance < 1
+                                      ? Colors.red
+                                      : const Color.fromARGB(255, 87, 176, 248),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        );
+                      }
+                    }
+                    return const Text('');
+                  })),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -519,10 +490,29 @@ class _HomeState extends State<Home> {
                 'Solde Dollars',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
-              trailing: const Text(
-                'USD 12.000',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-              ),
+              trailing: FutureBuilder(
+                  future: _checkSession != null
+                      ? transaction.getUsd(int.parse(_checkSession['SESSION']))
+                      : null,
+                  builder: ((context, AsyncSnapshot soldF) {
+                    if (soldF.hasData) {
+                      if (soldF.data != null) {
+                        var balance = soldF.data['result'][0]['balance'];
+                        return Text(
+                          'USD ${balance == null ? '0.0' : balance.toString()}',
+                          style: TextStyle(
+                              color: balance == null
+                                  ? Colors.grey
+                                  : balance < 1
+                                      ? Colors.red
+                                      : const Color.fromARGB(255, 87, 176, 248),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        );
+                      }
+                    }
+                    return const Text('');
+                  })),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -537,7 +527,10 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
               onTap: () {
-                Navigator.pop(context);
+                // localRestoreDb();
+               
+                // back(context);
+                // goto(context, const History());
               },
             ),
             ListTile(
@@ -550,7 +543,7 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
               onTap: () {
-                Navigator.pop(context);
+                localBackupDb();
               },
             ),
             ListTile(
@@ -587,6 +580,73 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void addClientLog() {
+    curstomerName.text = '';
+    curstomerPhone.text = '';
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, localState) {
+            return AlertDialog(
+              title: const Text('Nouveau client'),
+              content: SizedBox(
+                  width: fullWidth(context),
+                  height: fullHeight(context) * 0.28,
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      InkWell(
+                          onTap: () async {
+                            final contact =
+                                await FlutterContacts.openExternalPick();
+                            localState(() {
+                              if (contact != null) {
+                                curstomerName.text =
+                                    (contact.displayName).toString();
+                                curstomerPhone.text =
+                                    (contact.phones.first.number)
+                                        .toString()
+                                        .replaceAll(' ', '');
+                              } else {
+                                snackError(
+                                    context, 'Ce contact est invalide ..!');
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.add_circle_outline_rounded,
+                                color: greencolor,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('Contacts')
+                            ],
+                          )),
+                      inputField(context, curstomerName, 'Noms du client',
+                          Icons.person, TextInputType.text),
+                      inputField(context, curstomerPhone, 'Téléphone',
+                          Icons.phone, TextInputType.number),
+                      inputField(context, curstomerDetails, 'Description',
+                          Icons.density_medium_sharp, TextInputType.text),
+                    ]),
+                  )),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('ANNULER',
+                        style: TextStyle(color: greencolor))),
+                TextButton(
+                    onPressed: _onCreateCurstomer,
+                    child: const Text('AJOUTER',
+                        style: TextStyle(color: greencolor)))
+              ],
+            );
+          });
+        });
   }
 
   Widget searchBtn(icon, title, event) {

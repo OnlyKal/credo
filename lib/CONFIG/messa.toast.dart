@@ -5,7 +5,7 @@ messageSuccess(message) {
   Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.TOP,
+      gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
       backgroundColor: const Color.fromARGB(255, 5, 157, 25),
       textColor: Colors.white,
@@ -16,7 +16,7 @@ messageError(message) {
   Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.TOP,
+      gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
       backgroundColor: const Color.fromARGB(255, 234, 23, 23),
       textColor: Colors.white,
@@ -29,7 +29,6 @@ snackSuccess(context, message) {
       message,
       style: const TextStyle(color: Colors.white),
     ),
-
     backgroundColor: const Color.fromARGB(255, 5, 157, 25),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -41,7 +40,6 @@ snackError(context, message) {
       message,
       style: const TextStyle(color: Colors.white),
     ),
-
     backgroundColor: const Color.fromARGB(255, 234, 23, 23),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);

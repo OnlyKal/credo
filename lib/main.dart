@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import './EXPORTS/exports.files.dart';
 
-
 class PostHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(context) {
@@ -15,7 +14,7 @@ class PostHttpOverrides extends HttpOverrides {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = PostHttpOverrides();
-   
+  localBackupDb();
 
   runApp(MaterialApp(
     theme: ThemeData(

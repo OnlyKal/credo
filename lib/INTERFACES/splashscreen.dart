@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => checkSession['TOKEN'] != null
+                builder: (context) => checkSession['SESSION'] != null
                     ? const Home()
                     : const UserSignup())));
   }

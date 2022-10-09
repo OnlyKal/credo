@@ -54,7 +54,8 @@ class User {
 
   Future login() {
     Db db = Db();
-    return db.fetch("SELECT * FROM users where phoneNumber='$phoneNumber' or name='$name' and password='$password'");
+    return db.fetch(
+        "SELECT * FROM users where phoneNumber='$phoneNumber' or name='$name' and password='$password'");
   }
 
   Future get() {
