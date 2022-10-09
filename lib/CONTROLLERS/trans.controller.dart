@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import '../EXPORTS/exports.files.dart';
 
 Future addCDFDebit(
     mountUSD, customerId, datePayement, description, typeOp) async {
   Transaction transaction = Transaction(
       usdDebit: 0.0,
-      cdfCredit:0.0,
-      cdfDebit:double.parse(mountUSD) ,
+      cdfCredit: 0.0,
+      cdfDebit: double.parse(mountUSD),
       usdCredit: 0.0,
       clientId: customerId,
       paymentDate: datePayement,
@@ -14,9 +15,9 @@ Future addCDFDebit(
       typeOp: typeOp);
   transaction.add().then((trans) {
     if (trans['type'] == 'success') {
-      messageSuccess(trans['message']);
+      snackSuccess(context, trans['message']);
     } else {
-      messageError(trans['message']);
+      snackError(context, trans['message']);
     }
   });
 }
@@ -34,14 +35,15 @@ Future addCDFCredit(
       typeOp: typeOp);
   transaction.add().then((trans) {
     if (trans['type'] == 'success') {
-      messageSuccess(trans['message']);
+      snackSuccess(context, trans['message']);
     } else {
-      messageError(trans['message']);
+      snackError(context, trans['message']);
     }
   });
 }
 
-Future addUSDebit(mountUSD, customerId, description, typeOp,datePayement) async {
+Future addUSDebit(
+    mountUSD, customerId, description, typeOp, datePayement) async {
   Transaction transaction = Transaction(
       usdDebit: double.parse(mountUSD),
       cdfCredit: 0.0,
@@ -53,14 +55,15 @@ Future addUSDebit(mountUSD, customerId, description, typeOp,datePayement) async 
       typeOp: typeOp);
   transaction.add().then((trans) {
     if (trans['type'] == 'success') {
-      messageSuccess(trans['message']);
+      snackSuccess(context, trans['message']);
     } else {
-      messageError(trans['message']);
+      snackError(context, trans['message']);
     }
   });
 }
 
-Future addUSDCredit(mountCDF, customerId, description, typeOp,datePayement) async {
+Future addUSDCredit(
+    mountCDF, customerId, description, typeOp, datePayement) async {
   Transaction transaction = Transaction(
       usdDebit: 0.0,
       cdfCredit: 0.0,
@@ -72,9 +75,9 @@ Future addUSDCredit(mountCDF, customerId, description, typeOp,datePayement) asyn
       typeOp: typeOp);
   transaction.add().then((trans) {
     if (trans['type'] == 'success') {
-      messageSuccess(trans['message']);
+      snackSuccess(context, trans['message']);
     } else {
-      messageError(trans['message']);
+      snackError(context, trans['message']);
     }
   });
 }

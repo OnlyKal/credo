@@ -44,6 +44,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSContactsUsageDescription</key>  
-<string>Description of why you need the contacts permission.</string>
+<string>Contact du téléphone</string>
 </dict>
 </plist>

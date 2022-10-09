@@ -152,8 +152,7 @@ class _UserSignupState extends State<UserSignup> {
                                 children: [
                                   const Text('Avez vous déjà un compte ? '),
                                   GestureDetector(
-                                    onTap: () => Navigator.pushNamed(
-                                        context, '/user/signin'),
+                                    onTap: () => const UserSignin(),
                                     child: const Text(
                                       'Connectez-vous ! ',
                                       style: TextStyle(

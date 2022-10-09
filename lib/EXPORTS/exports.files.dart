@@ -1,4 +1,3 @@
-
 export '../INTERFACES/user.signup.dart';
 export '../INTERFACES/user.signin.dart';
 export '../INTERFACES/user.profil.dart';
@@ -26,6 +25,4 @@ export '../MODELS/transaction.dart';
 export '../CONTROLLERS/customer.controller.dart';
 export '../CONTROLLERS/customer.controller.dart';
 export '../CONTROLLERS/trans.controller.dart';
-
-
-
+export '../CONFIG/backup.dart';

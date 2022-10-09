@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import '../EXPORTS/exports.files.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     session();
+    FlutterContacts.requestPermission();
   }
 
   Future<void> session() async {
@@ -38,41 +41,35 @@ class _SplashScreenState extends State<SplashScreen> {
         height: fullHeight(context),
         width: fullWidth(context),
         child: Column(children: [
+          Container(
+            alignment: Alignment.bottomCenter,
+            height: fullHeight(context) * 0.7,
+            child: TextLiquidFill(
+              text: 'Credo',
+              waveColor: greencolor,
+              boxBackgroundColor: const Color.fromARGB(255, 48, 48, 48),
+              textStyle: const TextStyle(
+                  fontSize: 51, color: greencolor, fontWeight: FontWeight.bold),
+            ),
+          ),
           Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: const [
-                    Text(
-                      'Cre',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 44,
-                          color: greencolor),
-                    ),
-                    Text(
-                      'do',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w200,
-                          fontSize: 44,
-                          color: greencolor),
-                    ),
-                  ],
-                ),
-                const SizedBox(
+                SizedBox(
                   height: 3,
                 ),
-                const Text(
-                  'Credit Monitoring ',
+                Text(
+                  'Credit Management©Teal7',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w300,
-                    fontSize: 15,
+                    fontSize: 11,
                   ),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
               ])),
         ]),

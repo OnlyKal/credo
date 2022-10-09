@@ -6,7 +6,7 @@ Future signIn(context, userPhone, userPassword) async {
   User user = User(phoneNumber: userPhone, password: userPassword);
   user.login().then((data) {
     if (data['type'] == 'failure') {
-      messageError(data['message']);
+      snackError(context, data['message']);
     } else {
       user.get().then((user) {
         session.setString('user_token', user['result'][0]['token'].toString());
@@ -26,7 +26,7 @@ Future signUp(context, userName, userPhone, userMail, userPassword) async {
       password: userPassword);
   user.add().then((data) {
     if (data['type'] == 'failure') {
-      messageError(data['message']);
+      snackError(context, data['message']);
     } else {
       user.get().then((user) {
         session.setString('user_token', user['result'][0]['token'].toString());

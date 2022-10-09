@@ -1,6 +1,6 @@
 import 'package:credo/EXPORTS/exports.files.dart';
 
-void newCustomer(custumerName, customerPhone, customerDetail) {
+void newCustomer(custumerName, customerPhone, customerDetail, context) {
   Client customer = Client(
       name: custumerName,
       phoneNumber: customerPhone,
@@ -8,9 +8,9 @@ void newCustomer(custumerName, customerPhone, customerDetail) {
 
   customer.add().then((customer) {
     if (customer['type'] == 'success') {
-      messageSuccess(customer['message']);
+      snackSuccess(context, customer['message']);
     } else {
-      messageError(customer['message']);
+      snackError(context, customer['message']);
     }
   });
 }

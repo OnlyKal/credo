@@ -12,7 +12,7 @@ class _UserSigninState extends State<UserSignin> {
   TextEditingController userPassword = TextEditingController();
 
   bool isObscur = true;
-
+  bool showDrawer = true;
   _onConnexion() => signin(context, userPhone.text, userPassword.text);
 
   _onShowpassword() => setState(() {
@@ -104,7 +104,7 @@ class _UserSigninState extends State<UserSignin> {
                                     height: 25,
                                   ),
                                   inputField(context, userPhone, 'Téléphone',
-                                      Icons.phone,TextInputType.number),
+                                      Icons.phone, TextInputType.number),
                                   inputFieldPass(
                                       context,
                                       userPassword,

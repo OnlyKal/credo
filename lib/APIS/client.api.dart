@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../STATICS/data.static.dart';
 
-Future addCurtomer(curstomerName, curstomerPhone, curstomerDescription) async {
+Future addCurtomer(
+    curstomerName, curstomerPhone, curstomerDescription, context) async {
   try {
     var checkSession = await readSession();
     var response = await http.post(
@@ -24,9 +25,9 @@ Future addCurtomer(curstomerName, curstomerPhone, curstomerDescription) async {
 
     var data = jsonDecode(response.body);
     if (data['type'] == 'failure') {
-      messageError(data['message']);
+      snackError(context, data['message']);
     } else {
-      messageSuccess(data['message']);
+      snackSuccess(context, data['message']);
     }
   } catch (ex) {
     debugPrint('CREATE CURSTOMER : ${ex.toString()}');

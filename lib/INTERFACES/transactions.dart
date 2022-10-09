@@ -1,13 +1,12 @@
 import 'package:credo/EXPORTS/exports.files.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
+// import 'package:flutter_sms/flutter_sms.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class HomeTransaction extends StatefulWidget {
   final customer;
   const HomeTransaction({Key? key, @required this.customer}) : super(key: key);
-
   @override
   State<HomeTransaction> createState() => _HomeTransactionState();
 }
@@ -41,10 +40,10 @@ class _HomeTransactionState extends State<HomeTransaction> {
         });
         Navigator.of(context).pop();
       } else {
-        messageError("Ajouter une date d'echeance!");
+        snackError(context, "Ajouter une date d'echeance!");
       }
     } else {
-      messageError("Ajouter un montant !");
+      snackError(context, "Ajouter un montant !");
     }
   }
 
@@ -63,10 +62,10 @@ class _HomeTransactionState extends State<HomeTransaction> {
         });
         Navigator.of(context).pop();
       } else {
-        messageError("Ajouter une date d'echeance!");
+        snackError(context, "Ajouter une date d'echeance!");
       }
     } else {
-      messageError("Ajouter un montant !");
+      snackError(context, "Ajouter un montant !");
     }
   }
 
@@ -88,17 +87,17 @@ class _HomeTransactionState extends State<HomeTransaction> {
         });
         Navigator.of(context).pop();
       } else {
-        messageError("Ajouter une date d'echeance!");
+        snackError(context, "Ajouter une date d'echeance!");
       }
     } else {
-      messageError("Ajouter un montant !");
+      snackError(context, "Ajouter un montant !");
     }
   }
 
-  _sendSMS(message, List<String> clientNumbers) async {
-    String _result = await sendSMS(message: message, recipients: clientNumbers);
-    debugPrint(_result.toString());
-  }
+  // _sendSMS(message, List<String> clientNumbers) async {
+  //   String _result = await sendSMS(message: message, recipients: clientNumbers);
+  //   debugPrint(_result.toString());
+  // }
 
   @override
   void initState() {
@@ -111,7 +110,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            onPressed: () => Navigator.of(context).pushNamed('/home'),
+            onPressed: () => goTo(context, const Home()),
             icon: const Icon(Icons.arrow_back_ios),
           ),
           title: const Text(
@@ -218,23 +217,23 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                       251,
                                                                       245)),
                                                         ),
-                                                        // Image.asset(
-                                                        //   'assets/images/45000.png',
-                                                        //   height: 52,
-                                                        // )
-                                                        IconButton(
-                                                            onPressed: () {
-                                                              _sendSMS(
-                                                                  'Cher client , ... ',
-                                                                  [
-                                                                    widget
-                                                                        .customer[
-                                                                            'phoneNumber']
-                                                                        .toString()
-                                                                  ]);
-                                                            },
-                                                            icon: const Icon(Icons
-                                                                .message_rounded))
+                                                        Image.asset(
+                                                          'assets/images/45000.png',
+                                                          height: 52,
+                                                        )
+                                                        // IconButton(
+                                                        //     onPressed: () {
+                                                        //       _sendSMS(
+                                                        //           'Cher client , ... ',
+                                                        //           [
+                                                        //             widget
+                                                        //                 .customer[
+                                                        //                     'phoneNumber']
+                                                        //                 .toString()
+                                                        //           ]);
+                                                        //     },
+                                                        //     icon: const Icon(Icons
+                                                        //         .message_rounded))
                                                       ]),
                                                   Row(
                                                     children: [
@@ -260,12 +259,12 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                           MainAxisAlignment.start,
                                       children: [
                                         _option(Icons.bookmark_remove,
-                                            'Décaissement', _addDebit),
+                                            'Nouveau credit', _addDebit),
                                         const SizedBox(
                                           width: 15,
                                         ),
                                         _option(Icons.bookmark_add,
-                                            'Encaissement', _addCredit),
+                                            'Paiement credit', _addCredit),
                                         const SizedBox(
                                           width: 15,
                                         ),
@@ -331,14 +330,14 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                         'typeOp'] ==
                                                                     'cdfD'
                                                             ? const Text(
-                                                                'Debit ',
+                                                                'Ce client vous doit ',
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w700),
                                                               )
                                                             : const Text(
-                                                                'Credit',
+                                                                'Vous devez a ce client',
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -394,9 +393,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                   style: const TextStyle(
                                                                       color: Color.fromARGB(
                                                                           255,
-                                                                          183,
-                                                                          23,
-                                                                          12),
+                                                                          6,
+                                                                          138,
+                                                                          20),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
@@ -406,9 +405,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                   style: const TextStyle(
                                                                       color: Color.fromARGB(
                                                                           255,
-                                                                          183,
-                                                                          23,
-                                                                          12),
+                                                                          6,
+                                                                          138,
+                                                                          20),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
@@ -458,9 +457,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                   style: const TextStyle(
                                                                       color: Color.fromARGB(
                                                                           255,
-                                                                          6,
-                                                                          138,
-                                                                          20),
+                                                                          183,
+                                                                          23,
+                                                                          12),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
@@ -470,9 +469,9 @@ class _HomeTransactionState extends State<HomeTransaction> {
                                                                   style: const TextStyle(
                                                                       color: Color.fromARGB(
                                                                           255,
-                                                                          6,
-                                                                          138,
-                                                                          20),
+                                                                          183,
+                                                                          23,
+                                                                          12),
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
@@ -917,7 +916,7 @@ class _HomeTransactionState extends State<HomeTransaction> {
   }
 
   _option(icon, title, onTap) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Column(
         children: [

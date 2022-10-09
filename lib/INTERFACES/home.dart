@@ -1,7 +1,6 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
-import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -22,19 +21,19 @@ class _HomeState extends State<Home> {
     if (curstomerName.text != '') {
       if (curstomerPhone.text != '') {
         if (curstomerDetails.text != '') {
-          newCustomer(
-              curstomerName.text, curstomerPhone.text, curstomerDetails.text);
+          newCustomer(curstomerName.text, curstomerPhone.text,
+              curstomerDetails.text, context);
           setState(() {
             curstomerName.text = curstomerPhone.text = '';
           });
         } else {
-          messageError('Ajouter une description..!');
+          ('Ajouter une description..!');
         }
       } else {
-        messageError('Ajouter un numéro de téléphone..!');
+        snackError(context, 'Ajouter un numéro de téléphone..!');
       }
     } else {
-      messageError('Ajouter un nom..!');
+      snackError(context, 'Ajouter un nom..!');
     }
   }
 
@@ -66,329 +65,351 @@ class _HomeState extends State<Home> {
 
   Client customer = const Client();
   Transaction transaction = const Transaction();
+
+  _getPermission() async {
+    // await PerformanceOverlay??
+  }
+
   @override
   void initState() {
     setState(() {
       customer.get(_filter, _inverse);
     });
+
     super.initState();
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool searchBar = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: fullHeight(context),
-            width: fullWidth(context),
-            child: Column(children: [
-              StatefulBuilder(builder: ((context, setState) {
-                return SizedBox(
-                  width: fullWidth(context),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+      key: _scaffoldKey,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: fullHeight(context),
+          width: fullWidth(context),
+          child: Column(children: [
+            SizedBox(
+              height: paddingTop(context),
+            ),
+            StatefulBuilder(builder: (context, localState) {
+              return Container(
+                padding:
+                    const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          height: paddingTop(context),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 0, bottom: 0),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () =>
+                                      _scaffoldKey.currentState?.openDrawer(),
+                                  icon: const Icon(Icons.format_align_justify)),
+                              const SizedBox(
+                                width: 12,
+                              ),
+                              const Text(
+                                'Credo',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 24,
+                                  color: greencolor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          height: fullHeight(context) * 0.07,
-                          child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        'Credo',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 24,
-                                          color: greencolor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(children: [
-                                    if (searchBar == false)
-                                      IconButton(
-                                          onPressed: () => setState(
-                                              () => searchBar = !searchBar),
-                                          icon: const Icon(
-                                            Icons.search_rounded,
-                                            color: Color.fromARGB(
-                                                255, 179, 178, 178),
-                                          )),
-                                  ])
-                                ],
+                        if (searchBar == false)
+                          IconButton(
+                              onPressed: () =>
+                                  localState(() => searchBar = !searchBar),
+                              icon: const Icon(
+                                Icons.search_rounded,
+                                color: Color.fromARGB(255, 179, 178, 178),
                               )),
-                        ),
-                        if (searchBar != true)
-                          Container(
-                            color: greencolor,
-                            height: 4,
-                          )
-                        else
-                          Container(
-                              color: greencolor,
-                              height: fullHeight(context) * 0.18,
-                              child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 13, right: 13),
+                      ],
+                    ),
+                    SizedBox(
+                      width: fullWidth(context),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (searchBar != true)
+                              Container(
+                                color: greencolor,
+                                height: 4,
+                              )
+                            else
+                              Container(
+                                  color: greencolor,
+                                  height: fullHeight(context) * 0.18,
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 13, right: 13),
+                                      child: Column(
+                                        children: [
+                                          TextField(
+                                            controller: seachcontroller,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _searchResult =
+                                                    value.toString();
+                                                if (seachcontroller.text ==
+                                                    '') {}
+                                              });
+                                            },
+                                            decoration: InputDecoration(
+                                                hintText: 'Recherche....',
+                                                prefixIcon: IconButton(
+                                                    onPressed: () {
+                                                      localState(() {
+                                                        searchBar = !searchBar;
+                                                        if (searchBar ==
+                                                            false) {
+                                                          seachcontroller.text =
+                                                              '';
+                                                        }
+                                                      });
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.arrow_back,
+                                                      color: Colors.white,
+                                                    )),
+                                                enabledBorder:
+                                                    const UnderlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide.none),
+                                                border:
+                                                    const UnderlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide.none),
+                                                focusedBorder:
+                                                    const UnderlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide.none)),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Row(
+                                            children: [
+                                              searchBtn(
+                                                  _inverse == 'ASC'
+                                                      ? Icons
+                                                          .vertical_align_bottom_sharp
+                                                      : Icons
+                                                          .vertical_align_top_sharp,
+                                                  _inverse == 'ASC'
+                                                      ? 'Ascendent'
+                                                      : 'Descendant',
+                                                  _onFilter),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              searchBtn(
+                                                  Icons.card_membership_rounded,
+                                                  'Identification',
+                                                  _onFilterClientById),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              searchBtn(
+                                                  Icons.align_vertical_center,
+                                                  'Détail',
+                                                  _onFilterClientByDetail),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              searchBtn(
+                                                  Icons.person_outline_rounded,
+                                                  'Noms',
+                                                  _onFilterClientByName),
+                                            ],
+                                          )
+                                        ],
+                                      )))
+                          ]),
+                    ),
+                  ],
+                ),
+              );
+            }),
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.only(left: 17, right: 17),
+              child: FutureBuilder<dynamic>(
+                  future: _searchResult != ''
+                      ? customer.getLike(_searchResult)
+                      : customer.get(_filter, _inverse),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> curtomer) {
+                    if (curtomer.hasError) {
+                      return _error('Données inaccessibles..!');
+                    }
+                    if (curtomer.connectionState == ConnectionState.none) {
+                      return _error('Une erreur est produite...!');
+                    }
+                    if (curtomer.connectionState == ConnectionState.waiting) {
+                      return const Text('');
+                    }
+                    if (curtomer.connectionState == ConnectionState.done) {
+                      if (curtomer.hasData) {
+                        if (curtomer.data['type'] == 'success') {
+                          var data = curtomer.data['result'];
+
+                          if (data.length == 0) {
+                            return _empty('Désolé, aucun client identifié...!');
+                          }
+
+                          return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              itemCount: curtomer.data['result'].length,
+                              itemBuilder: (context, i) {
+                                return InkWell(
+                                  onTap: () => goto(context,
+                                      HomeTransaction(customer: data[i])),
                                   child: Column(
                                     children: [
-                                      TextField(
-                                        controller: seachcontroller,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _searchResult = value.toString();
-                                            if (seachcontroller.text == '') {}
-                                          });
-                                        },
-                                        decoration: InputDecoration(
-                                            hintText: 'Recherche....',
-                                            prefixIcon: IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    searchBar = !searchBar;
-                                                    if (searchBar == false) {
-                                                      seachcontroller.text = '';
-                                                    }
-                                                  });
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_back,
-                                                  color: Colors.white,
-                                                )),
-                                            enabledBorder:
-                                                const UnderlineInputBorder(
-                                                    borderSide:
-                                                        BorderSide.none),
-                                            border: const UnderlineInputBorder(
-                                                borderSide: BorderSide.none),
-                                            focusedBorder:
-                                                const UnderlineInputBorder(
-                                                    borderSide:
-                                                        BorderSide.none)),
-                                      ),
                                       const SizedBox(
-                                        height: 4,
+                                        height: 15,
                                       ),
-                                      Row(
-                                        children: [
-                                          searchBtn(
-                                              _inverse == 'ASC'
-                                                  ? Icons
-                                                      .vertical_align_bottom_sharp
-                                                  : Icons
-                                                      .vertical_align_top_sharp,
-                                              _inverse == 'ASC'
-                                                  ? 'Ascendent'
-                                                  : 'Descendant',
-                                              _onFilter),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          searchBtn(
-                                              Icons.card_membership_rounded,
-                                              'Identification',
-                                              _onFilterClientById),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        height: fullHeight(context) * .06,
+                                        width: fullWidth(context),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const CircleAvatar(
+                                                        backgroundColor:
+                                                            greencolor,
+                                                        child: Icon(
+                                                          Icons
+                                                              .folder_shared_rounded,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 7,
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            data[i]['name']
+                                                                .toString(),
+                                                            style: const TextStyle(
+                                                                fontSize: 17,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        204,
+                                                                        203,
+                                                                        203),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 4,
+                                                          ),
+                                                          Text(
+                                                            data[i]['phoneNumber']
+                                                                .toString(),
+                                                            style: const TextStyle(
+                                                                fontSize: 12,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        104,
+                                                                        104,
+                                                                        104)),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      balanceCDF(context,
+                                                          data[i]['id']),
+                                                      const SizedBox(
+                                                        height: 4,
+                                                      ),
+                                                      balanceUSD(context,
+                                                          data[i]['id'])
+                                                    ],
+                                                  )
+                                                ],
+                                              )
+                                            ]),
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        children: [
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          searchBtn(
-                                              Icons.align_vertical_center,
-                                              'Détail',
-                                              _onFilterClientByDetail),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          searchBtn(
-                                              Icons.person_outline_rounded,
-                                              'Noms',
-                                              _onFilterClientByName),
-                                        ],
+                                      Container(
+                                        height: 1,
+                                        width: fullWidth(context),
+                                        color: const Color.fromARGB(
+                                            228, 74, 73, 73),
                                       )
                                     ],
-                                  )))
-                      ]),
-                );
-              })),
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.only(left: 17, right: 17),
-                child: FutureBuilder<dynamic>(
-                    future: _searchResult != ''
-                        ? customer.getLike(_searchResult)
-                        : customer.get(_filter, _inverse),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> curtomer) {
-                      if (curtomer.hasError) {
-                        return _error('Données inaccessibles..!');
-                      }
-                      if (curtomer.connectionState == ConnectionState.none) {
-                        return _error('Une erreur est produite...!');
-                      }
-                      if (curtomer.connectionState == ConnectionState.waiting) {
-                        return const Text('');
-                      }
-                      if (curtomer.connectionState == ConnectionState.done) {
-                        if (curtomer.hasData) {
-                          if (curtomer.data['type'] == 'success') {
-                            var data = curtomer.data['result'];
-
-                            if (data.length == 0) {
-                              return _empty(
-                                  'Désolé, aucun client identifié...!');
-                            }
-
-                            return ListView.builder(
-                                padding: EdgeInsets.zero,
-                                itemCount: curtomer.data['result'].length,
-                                itemBuilder: (context, i) {
-                                  return InkWell(
-                                    onTap: () => goto(context,
-                                        HomeTransaction(customer: data[i])),
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        SizedBox(
-                                          height: fullHeight(context) * .06,
-                                          width: fullWidth(context),
-                                          child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        const CircleAvatar(
-                                                          backgroundColor:
-                                                              greencolor,
-                                                          child: Icon(
-                                                            Icons
-                                                                .folder_shared_rounded,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 7,
-                                                        ),
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              data[i]['name']
-                                                                  .toString(),
-                                                              style: const TextStyle(
-                                                                  fontSize: 17,
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          204,
-                                                                          203,
-                                                                          203),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 4,
-                                                            ),
-                                                            Text(
-                                                              data[i]['phoneNumber']
-                                                                  .toString(),
-                                                              style: const TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          104,
-                                                                          104,
-                                                                          104)),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        balanceCDF(context,
-                                                            data[i]['id']),
-                                                        const SizedBox(
-                                                          height: 4,
-                                                        ),
-                                                        balanceUSD(context,
-                                                            data[i]['id'])
-                                                      ],
-                                                    )
-                                                  ],
-                                                )
-                                              ]),
-                                        ),
-                                        Container(
-                                          height: 1,
-                                          width: fullWidth(context),
-                                          color: const Color.fromARGB(
-                                              228, 74, 73, 73),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                });
-                          }
+                                  ),
+                                );
+                              });
                         }
                       }
-                      return _error('Aucune donnée trouvée...!');
-                    }),
-              )),
-            ]),
-          ),
+                    }
+                    return _error('Aucune donnée trouvée...!');
+                  }),
+            )),
+          ]),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: greencolor,
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: greencolor,
+        onPressed: () {
+          curstomerName.text = '';
+          curstomerPhone.text = '';
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return StatefulBuilder(builder: (context, localState) {
                   return AlertDialog(
                     title: const Text('Nouveau client'),
                     content: SizedBox(
@@ -396,19 +417,18 @@ class _HomeState extends State<Home> {
                         height: fullHeight(context) * 0.28,
                         child: SingleChildScrollView(
                           child: Column(children: [
-                            GestureDetector(
+                            InkWell(
                                 onTap: () async {
-                                  final PhoneContact contact =
-                                      await FlutterContactPicker
-                                          .pickPhoneContact();
-
-                                  setState(() {
+                                  final contact =
+                                      await FlutterContacts.openExternalPick();
+                                  localState(() {
                                     curstomerName.text =
-                                        (contact.fullName).toString();
+                                        (contact?.displayName).toString();
                                     curstomerPhone.text =
-                                        (contact.phoneNumber!.number)
+                                        (contact?.phones.first.number)
                                             .toString()
                                             .replaceAll(' ', '');
+                                    print(contact.toString());
                                   });
                                 },
                                 child: Row(
@@ -443,12 +463,130 @@ class _HomeState extends State<Home> {
                     ],
                   );
                 });
-          },
-          child: const Icon(
-            Icons.person_add_alt_outlined,
-            color: Colors.white,
-          ),
-        ));
+              });
+        },
+        child: const Icon(
+          Icons.person_add_alt_outlined,
+          color: Colors.white,
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: greencolor,
+              ),
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.person_add_alt,
+                color: greencolor,
+              ),
+              title: const Text(
+                'Nouveau Client',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.arrow_forward_ios,
+                color: greencolor,
+              ),
+              title: const Text(
+                'Solde Franc',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+              ),
+              trailing: const Text(
+                'CDF 66.000',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.arrow_forward_ios,
+                color: greencolor,
+              ),
+              title: const Text(
+                'Solde Dollars',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+              ),
+              trailing: const Text(
+                'USD 12.000',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.history,
+                color: greencolor,
+              ),
+              title: const Text(
+                'Historiques',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.screen_rotation_alt,
+                color: greencolor,
+              ),
+              title: const Text(
+                'Backup & Restore',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.settings,
+                color: greencolor,
+              ),
+              title: const Text(
+                'Paramétres',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(
+              color: Colors.grey,
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.help_outline,
+                size: 20,
+                color: Colors.grey,
+              ),
+              title: const Text(
+                'A Propos',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget searchBtn(icon, title, event) {
@@ -459,7 +597,7 @@ class _HomeState extends State<Home> {
                 elevation: 0.3,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
-                backgroundColor: Color.fromARGB(181, 62, 242, 224)),
+                backgroundColor: const Color.fromARGB(181, 62, 242, 224)),
             onPressed: event,
             child: Row(
               children: [

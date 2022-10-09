@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import '../STATICS/data.static.dart';
 
 Future addOperation(operationType, operationMontant, operationDesc, customerId,
-    echeance) async {
+    echeance, context) async {
   try {
     var checkSession = await readSession();
     var response = await http.post(
@@ -28,16 +28,16 @@ Future addOperation(operationType, operationMontant, operationDesc, customerId,
     var data = jsonDecode(response.body);
     debugPrint(response.body);
     if (data['type'] == 'failure') {
-      messageError(data['message']);
+      snackError(context, data['message']);
     } else {
-      messageSuccess(data['message']);
+      snackSuccess(context, data['message']);
     }
   } catch (ex) {
     debugPrint('CREATE OPERATION : ${ex.toString()}');
   }
 }
 
-Future getTransction(customerId) async {
+Future getTransction(customerId, context) async {
   try {
     var checkSession = await readSession();
     var response = await http.post(
@@ -53,9 +53,9 @@ Future getTransction(customerId) async {
     var data = jsonDecode(response.body);
     debugPrint(response.body);
     if (data['type'] == 'failure') {
-      messageError(data['message']);
+      snackSuccess(context, data['message']);
     } else {
-      messageSuccess(data['message']);
+      snackError(context, data['message']);
     }
   } catch (ex) {
     debugPrint('CREATE OPERATION : ${ex.toString()}');

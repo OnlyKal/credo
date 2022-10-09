@@ -61,7 +61,7 @@ Future signin(context, userPhone, userPassword) async {
     debugPrint(response.body);
 
     if (data['type'] == 'failure') {
-      messageError(data['message']);
+      snackError(context, data['message']);
     } else {
       session.setString('user_token', data['result']['token'].toString());
       session.setString('user_id', data['result']['id'].toString());
@@ -93,7 +93,7 @@ Future signup(context, userName, userPhone, userPassword, userMail) async {
     var data = jsonDecode(response.body);
 
     if (data['type'] == 'failure') {
-      messageError(data['message']);
+      snackError(context, data['message']);
     } else {
       session.setString('user_token', data['result']['token'].toString());
       session.setString('user_id', data['result']['id'].toString());
