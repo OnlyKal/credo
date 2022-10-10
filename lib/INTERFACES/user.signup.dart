@@ -10,15 +10,14 @@ class UserSignup extends StatefulWidget {
 }
 
 class _UserSignupState extends State<UserSignup> {
-
   TextEditingController userName = TextEditingController();
   TextEditingController userPhone = TextEditingController();
   TextEditingController userMail = TextEditingController();
   TextEditingController userPassword = TextEditingController();
   bool isObscur = true;
 
-  _onAddUser() =>
-      signUp(context, userName.text, userPhone.text, userMail.text, userPassword.text);
+  _onAddUser() => signUp(
+      context, userName.text, userPhone.text, userMail.text, userPassword.text);
 
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
@@ -152,7 +151,8 @@ class _UserSignupState extends State<UserSignup> {
                                 children: [
                                   const Text('Avez vous déjà un compte ? '),
                                   GestureDetector(
-                                    onTap: () => const UserSignin(),
+                                    onTap: () =>
+                                        goTo(context, const UserSignin()),
                                     child: const Text(
                                       'Connectez-vous ! ',
                                       style: TextStyle(

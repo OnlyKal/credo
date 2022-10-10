@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:credo/CONFIG/func.dart';
-import 'package:credo/CONFIG/messa.toast.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../EXPORTS/exports.files.dart';
 
 void createFolders() async {
   var localPath = '/storage/emulated/0';
@@ -43,13 +43,16 @@ void localBackupDb() async {
   }
 }
 
-void localRestoreDb() async {
+Future localRestoreDb() async {
+  User user = const User();
+  dynamic userInfo;
   try {
     var dbPath = await getDatabasesPath();
     Directory fullDbpathFile = Directory('$dbPath/credo.db');
     var localPath = '/storage/emulated/0';
     File destinationPath = File('$localPath/CREDO/DB/credo.db');
 
+    Permission.storage.request();
     var status = await Permission.storage.status;
     if (status.isGranted) {
       if (await destinationPath.exists()) {
@@ -57,7 +60,7 @@ void localRestoreDb() async {
           if (path
               .toString()
               .contains('/data/user/0/com.example.credo/databases/credo.db')) {
-            messageSuccess('Backup est bien restauré..!');
+            userInfo = true;
           } else {
             messageError('Restauration du backup a echoué..!!');
           }
@@ -65,15 +68,12 @@ void localRestoreDb() async {
       } else {
         prt('mesage');
       }
-    } else {
-      prt('ug');
     }
+
+    return userInfo;
   } catch (ex) {
     prt(ex.toString());
   }
 }
 
-
-void onlineDb(){
-  
-}
+void onlineDb() {}

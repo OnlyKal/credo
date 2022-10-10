@@ -1,3 +1,5 @@
+import 'package:credo/CONFIG/func.dart';
+import 'package:credo/CONTROLLERS/user.controller.dart';
 import 'package:flutter/material.dart';
 import '../EXPORTS/exports.files.dart';
 
@@ -13,11 +15,16 @@ class _UserSigninState extends State<UserSignin> {
 
   bool isObscur = true;
   bool showDrawer = true;
-  _onConnexion() => signin(context, userPhone.text, userPassword.text);
+  _onConnexion() => signIn(context, userPhone.text, userPassword.text);
 
   _onShowpassword() => setState(() {
         isObscur = !isObscur;
       });
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,8 +136,22 @@ class _UserSigninState extends State<UserSignin> {
                                 children: [
                                   const Text('Avez vous déjà un compte ? '),
                                   GestureDetector(
-                                    onTap: () => Navigator.pushNamed(
-                                        context, '/user/signup'),
+                                    onTap: () {
+                                      // User user = const User();
+                                      // user.getUser().then((info) {
+                                      //   if (info['type']
+                                      //       .toString()
+                                      //       .contains('failure')) {
+                                      //     prt(info.toString());
+                                      //   } else {
+                                      //     prt(info.toString());
+                                      //   }
+                                      // });
+                                      // localRestoreDb().then((infos) {
+                                      //   prt(infos.toString());
+                                      // });
+                                      goTo(context, const UserSignup());
+                                    },
                                     child: const Text(
                                       'Créer un compte ! ',
                                       style: TextStyle(

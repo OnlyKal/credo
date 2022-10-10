@@ -62,4 +62,8 @@ class User {
     Db db = Db();
     return db.fetch("SELECT * FROM users");
   }
+  Future getUser() {
+    Db db = Db();
+    return db.fetch("SELECT * FROM users");
+  }
 }

@@ -544,7 +544,9 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
               onTap: () {
-                // localRestoreDb();
+                localRestoreDb().then((infos) {
+                  prt(infos.toString());
+                });
 
                 // back(context);
                 // goto(context, const History());
