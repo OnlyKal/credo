@@ -425,11 +425,28 @@ class _HomeState extends State<Home> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: greencolor,
               ),
-              child: Text('Drawer Header'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      Text(
+                        'Credo',
+                        style: TextStyle(
+                            fontSize: 44, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'Crédit management',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+                  )
+                ],
+              ),
             ),
             ListTile(
               leading: const Icon(
@@ -528,7 +545,7 @@ class _HomeState extends State<Home> {
               ),
               onTap: () {
                 // localRestoreDb();
-               
+
                 // back(context);
                 // goto(context, const History());
               },
