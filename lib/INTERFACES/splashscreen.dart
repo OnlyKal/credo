@@ -18,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     session();
     FlutterContacts.requestPermission();
+    createFolders();
   }
 
   Future<void> session() async {
@@ -30,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(
                 builder: (context) => checkSession['SESSION'] != null
                     ? const Home()
-                    : const UserSignin())));
+                    : const UserSignup())));
   }
 
   @override

@@ -15,6 +15,7 @@ class _UserSigninState extends State<UserSignin> {
 
   bool isObscur = true;
   bool showDrawer = true;
+  User user = const User();
   _onConnexion() => signIn(context, userPhone.text, userPassword.text);
 
   _onShowpassword() => setState(() {
@@ -137,19 +138,6 @@ class _UserSigninState extends State<UserSignin> {
                                   const Text('Avez vous déjà un compte ? '),
                                   GestureDetector(
                                     onTap: () {
-                                      // User user = const User();
-                                      // user.getUser().then((info) {
-                                      //   if (info['type']
-                                      //       .toString()
-                                      //       .contains('failure')) {
-                                      //     prt(info.toString());
-                                      //   } else {
-                                      //     prt(info.toString());
-                                      //   }
-                                      // });
-                                      // localRestoreDb().then((infos) {
-                                      //   prt(infos.toString());
-                                      // });
                                       goTo(context, const UserSignup());
                                     },
                                     child: const Text(

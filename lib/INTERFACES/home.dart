@@ -1,6 +1,7 @@
 import 'package:credo/CONFIG/func.dart';
 import 'package:credo/INTERFACES/history.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import '../EXPORTS/exports.files.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
@@ -84,7 +85,6 @@ class _HomeState extends State<Home> {
       session();
     });
     _scaffoldKey.currentState?.openDrawer();
-    createFolders();
   }
 
   Future<void> session() async {
@@ -544,10 +544,6 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
               onTap: () {
-                localRestoreDb().then((infos) {
-                  prt(infos.toString());
-                });
-
                 // back(context);
                 // goto(context, const History());
               },
@@ -558,11 +554,59 @@ class _HomeState extends State<Home> {
                 color: greencolor,
               ),
               title: const Text(
-                'Backup & Restore',
+                'Restore les données',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
               onTap: () {
-                localBackupDb();
+                back(context);
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text(
+                          "Restaurer les données",
+                          style: TextStyle(fontSize: 17),
+                        ),
+                        content: SingleChildScrollView(
+                          child: SizedBox(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "La restauration de données vous permettra de récupérer les anciennes donnnées sauvegardées disponibles..!",
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.grey),
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              Text(
+                                "Voulez-vous poursuivre ?",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          )),
+                        ),
+                        actions: [
+                          TextButton(
+                              onPressed: () => back(context),
+                              child: const Text(
+                                "ANNULER",
+                                style: TextStyle(color: greencolor),
+                              )),
+                          TextButton(
+                              onPressed: () => localRestoreDb().then((check){
+                                 if(check==true){
+                                   Phoenix.rebirth(context);
+                                 }
+                              }),
+                              child: const Text(
+                                "CONFIRMER",
+                                style: TextStyle(color: greencolor),
+                              )),
+                        ],
+                      );
+                    });
               },
             ),
             ListTile(
@@ -734,10 +778,12 @@ class _HomeState extends State<Home> {
                       'CDF ${cdf.data['result'][0]['balance'].toString()}',
                       style: TextStyle(
                           fontSize: 12,
-                          color: cdf.data['result'][0]['balance'] >= 0.0
-                              ? Colors.amber
-                              : const Color.fromARGB(255, 241, 39, 39),
-                          fontWeight: FontWeight.w500),
+                          color: cdf.data['result'][0]['balance'] > 0.0
+                              ? Colors.blue
+                              : cdf.data['result'][0]['balance'] == 0.0
+                                  ? const Color.fromARGB(255, 104, 104, 104)
+                                  : const Color.fromARGB(255, 241, 39, 39),
+                          fontWeight: FontWeight.w700),
                     );
             }
           }
@@ -762,10 +808,12 @@ class _HomeState extends State<Home> {
                       'USD ${usd.data['result'][0]['balance'].toString()}',
                       style: TextStyle(
                           fontSize: 12,
-                          color: usd.data['result'][0]['balance'] >= 0.0
-                              ? Colors.blueAccent
-                              : const Color.fromARGB(255, 241, 39, 39),
-                          fontWeight: FontWeight.w500),
+                          color: usd.data['result'][0]['balance'] > 0.0
+                              ? Colors.blue
+                              : usd.data['result'][0]['balance'] == 0.0
+                                  ? const Color.fromARGB(255, 104, 104, 104)
+                                  : const Color.fromARGB(255, 241, 39, 39),
+                          fontWeight: FontWeight.w700),
                     );
             }
           }

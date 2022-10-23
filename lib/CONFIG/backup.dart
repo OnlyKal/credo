@@ -63,10 +63,12 @@ Future localRestoreDb() async {
             userInfo = true;
           } else {
             messageError('Restauration du backup a echoué..!!');
+             userInfo = false;
           }
         });
       } else {
-        prt('mesage');
+        messageError("Aucune base de donnée disponible...!");
+         userInfo = false;
       }
     }
 
